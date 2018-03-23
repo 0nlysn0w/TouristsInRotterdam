@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
-using CsvHelper.Configuration;
+using System.Text.RegularExpressions;
 
 namespace tir.data
 {
@@ -15,14 +14,11 @@ namespace tir.data
 	{
 		static void Main(string[] args)
 		{
-
 			WebClient client = new WebClient();
 
 			byte[] bytes = client.DownloadData(Properties.Settings.Default.SourceURL);
 
 			var resultString = Encoding.Default.GetString(bytes);
-
-			//TextReader text = new StringReader(resultString);
 
 			using (var stream = new MemoryStream())
 			using (var writer = new StreamWriter(stream))
@@ -35,9 +31,27 @@ namespace tir.data
 
 				csv.Configuration.Delimiter = ";";
 
-				var records = csv.GetRecords<Stop>().ToList();
+				var stops = csv.GetRecords<Stop>().ToList();
+				string stopDesc = "";
+				foreach (var stop in stops)
+				{
+					stopDesc += stop.desc;
+					StopType(stopDesc);
+				}
 
 			}
+		}
+		// https://codereview.stackexchange.com/questions/119519/regex-to-first-match-then-replace-found-matches
+		public static string StopType(string desc)
+		{
+			var Input = "Tram";
+
+			Regex rx = new Regex(@"tram", RegexOptions.IgnoreCase);
+
+			Match match = rx.Match(desc);
+
+			var type = desc;
+			return type;
 		}
 	}
 }
