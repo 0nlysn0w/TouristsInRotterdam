@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tir.data
 {
-	public class Stop
+	public class csvStop
 	{
 		public string name { get; set; }
 		public string desc { get; set; }

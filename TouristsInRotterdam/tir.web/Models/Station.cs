@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -7,12 +8,12 @@ namespace tir.web.Models
 {
 	public class Station
 	{
-		public int id { get; set; }
-		public string operator_id { get; set; }
-		public string name { get; set; }
-		public string town { get; set; }
-		public double lon { get; set; }
-		public double lat { get; set; }
-		public StationType StationType { get; set; }
+		public int Id { get; set; }
+		public string Name { get; set; }
+		//StationType in plaats van string, dit is iets voor later
+		public string Type { get; set; }
+		public string Latitude { get; set; }
+
+		public string Longitude { get; set; }
 	}
 }

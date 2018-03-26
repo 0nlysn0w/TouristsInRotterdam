@@ -1,4 +1,4 @@
-namespace tir.web.Migrations
+namespace TouristsInRotterdam.Migrations
 {
     using System;
     using System.Data.Entity;
@@ -9,7 +9,7 @@ namespace tir.web.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(tir.web.Models.TirContext context)

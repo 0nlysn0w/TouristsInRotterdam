@@ -10,7 +10,7 @@ namespace tir.web.Models
 	{
 		public TirContext(): base()
         {
-
+			Database.SetInitializer<TirContext>(new CreateDatabaseIfNotExists<TirContext>());
 		}
 
 		public DbSet<Station> Stations { get; set; }
