@@ -37,14 +37,22 @@ namespace tir.data
 				{
 					csvStops[i].desc = StopType(csvStops[i].desc);
 
-					stations.Add(new tir.web.Models.Station
+					stations.Add(new tir.web.Models.Station()
 					{
 						Name = csvStops[i].name,
 						Type = csvStops[i].desc,
 						Longitude = csvStops[i].longitude,
 						Latitude = csvStops[i].latitude
 					});
+				}
 
+				using (var dbc = new tir.web.Models.TirContext())
+				{
+					foreach (var station in stations)
+					{
+						dbc.Stations.Add(station);
+					}
+					dbc.SaveChanges();
 				}
 			}
 		}
