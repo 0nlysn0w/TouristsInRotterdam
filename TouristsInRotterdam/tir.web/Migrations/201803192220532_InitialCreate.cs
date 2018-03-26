@@ -1,4 +1,4 @@
-namespace TouristsInRotterdam.Migrations
+namespace tir.web.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;

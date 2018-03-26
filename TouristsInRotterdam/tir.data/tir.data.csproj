@@ -62,6 +62,11 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\tir.web\tir.web.csproj">
+      <Project>{12971f93-1e1b-40ca-8ac6-133ff455f552}</Project>
+      <Name>tir.web</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -32,26 +32,29 @@ namespace tir.data
 				csv.Configuration.Delimiter = ";";
 
 				var stops = csv.GetRecords<Stop>().ToList();
-				string stopDesc = "";
-				foreach (var stop in stops)
-				{
-					stopDesc += stop.desc;
-					StopType(stopDesc);
-				}
 
+				for (int i = 0; i < stops.Count; i++)
+				{
+					stops[i].desc = StopType(stops[i].desc);
+				}
 			}
 		}
-		// https://codereview.stackexchange.com/questions/119519/regex-to-first-match-then-replace-found-matches
 		public static string StopType(string desc)
 		{
-			var Input = "Tram";
+			List<string> SearchTypes = Enum.GetNames(typeof(tir.web.Models.StationType)).ToList();
 
-			Regex rx = new Regex(@"tram", RegexOptions.IgnoreCase);
+			foreach (var toMatch in SearchTypes)
+			{
+				Regex rx = new Regex(toMatch, RegexOptions.IgnoreCase);
 
-			Match match = rx.Match(desc);
+				var match = rx.Match(desc);
 
-			var type = desc;
-			return type;
+				if (rx.Match(desc).Success)
+				{
+					return toMatch;
+				}
+			}
+			return "Unknown";
 		}
 	}
 }

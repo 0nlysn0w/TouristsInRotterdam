@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace TouristsInRotterdam.Models
+namespace tir.web.Models
 {
 	public class Station
 	{

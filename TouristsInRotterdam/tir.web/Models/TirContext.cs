@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-namespace TouristsInRotterdam.Models
+namespace tir.web.Models
 {
 	public class TirContext : DbContext
 	{

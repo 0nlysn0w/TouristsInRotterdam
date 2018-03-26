@@ -1,18 +1,18 @@
-namespace TouristsInRotterdam.Migrations
+namespace tir.web.Migrations
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<TouristsInRotterdam.Models.TirContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<tir.web.Models.TirContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(TouristsInRotterdam.Models.TirContext context)
+        protected override void Seed(tir.web.Models.TirContext context)
         {
             //  This method will be called after migrating to the latest version.
 
