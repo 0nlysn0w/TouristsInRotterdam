@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using CsvHelper;
+using System.Text.RegularExpressions;
 
 namespace tir.data
 {
@@ -13,47 +14,47 @@ namespace tir.data
 	{
 		static void Main(string[] args)
 		{
-			var sourceFile = "stops.csv.gz";
-			using (var client = new WebClient())
+			WebClient client = new WebClient();
+
+			byte[] bytes = client.DownloadData(Properties.Settings.Default.SourceURL);
+
+			var resultString = Encoding.Default.GetString(bytes);
+
+			using (var stream = new MemoryStream())
+			using (var writer = new StreamWriter(stream))
+			using (var reader = new StreamReader(stream))
+			using (var csv = new CsvReader(reader))
 			{
-				client.DownloadFile("http://data.openov.nl/haltes/stops.csv.gz", sourceFile);
-			}
+				writer.Write(resultString);
+				writer.Flush();
+				stream.Position = 0;
 
-			var targetFile = File.ReadAllBytes(sourceFile);
-			var decompressed = Decompress(targetFile);
+				csv.Configuration.Delimiter = ";";
 
-			//var formattedData = Encoding.ASCII.GetString(decompressed);
+				var stops = csv.GetRecords<Stop>().ToList();
 
-			var reader = new StreamReader(decompressed);
-
-
-			Console.ReadLine();
-		}
-
-		static Stream Decompress(byte[] gzip)
-		{
-			// Create a GZIP stream with decompression mode.
-			// ... Then create a buffer and write into while reading from the GZIP stream.
-			using (GZipStream stream = new GZipStream(new MemoryStream(gzip),
-				CompressionMode.Decompress))
-			{
-				const int size = 4096;
-				byte[] buffer = new byte[size];
-				using (MemoryStream memory = new MemoryStream())
+				for (int i = 0; i < stops.Count; i++)
 				{
-					int count = 0;
-					do
-					{
-						count = stream.Read(buffer, 0, size);
-						if (count > 0)
-						{
-							memory.Write(buffer, 0, count);
-						}
-					}
-					while (count > 0);
-					return memory;
+					stops[i].desc = StopType(stops[i].desc);
 				}
 			}
+		}
+		public static string StopType(string desc)
+		{
+			List<string> SearchTypes = Enum.GetNames(typeof(tir.web.Models.StationType)).ToList();
+
+			foreach (var toMatch in SearchTypes)
+			{
+				Regex rx = new Regex(toMatch, RegexOptions.IgnoreCase);
+
+				var match = rx.Match(desc);
+
+				if (rx.Match(desc).Success)
+				{
+					return toMatch;
+				}
+			}
+			return "Unknown";
 		}
 	}
 }
