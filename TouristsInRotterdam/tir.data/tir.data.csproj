@@ -47,6 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseConfiguration.cs" />
+    <Compile Include="dsTirCache.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsTirCache.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -58,6 +63,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="dsTirCache.xsc">
+      <DependentUpon>dsTirCache.xsd</DependentUpon>
+    </None>
+    <None Include="dsTirCache.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsTirCache.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="dsTirCache.xss">
+      <DependentUpon>dsTirCache.xsd</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

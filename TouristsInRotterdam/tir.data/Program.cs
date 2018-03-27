@@ -8,11 +8,19 @@ using System.Threading.Tasks;
 using CsvHelper;
 using System.Text.RegularExpressions;
 using tir.web.Models;
+using System.Data.SqlClient;
+using tir.data.dsTirCacheTableAdapters;
 
 namespace tir.data
 {
 	class Program
 	{
+		public Program()
+		{
+			_sqlConn = new SqlConnection(tir.web.Properties.Settings.Default.TirCache);
+			_sqlConn.Open();
+			
+		}
 		public static tir.web.Properties.Settings Settings = tir.web.Properties.Settings.Default;
 		static void Main(string[] args)
 		{
@@ -20,7 +28,7 @@ namespace tir.data
 
 			databaseConfig.DatabaseBuilder();
 
-			//DataProcessor();
+			DataProcessor();
 		}
 		public static void DataProcessor() { 
 			WebClient client = new WebClient();
@@ -54,15 +62,25 @@ namespace tir.data
 						Latitude = csvStops[i].latitude
 					});
 				}
+				//saving
 
-				using (var dbc = new tir.web.Models.TirContext())
+				_dataTables = new dsTirCache();
+
+				var taStation = new StationsTableAdapter();
+				var tblStations = _dataTables.Stations;
+
+				foreach (var station in stations)
 				{
-					foreach (var station in stations)
-					{
-						dbc.Stations.Add(station);
-					}
-					dbc.SaveChanges();
+					var newRow = tblStations.NewStationsRow();
+					newRow.Name = station.Name;
+					newRow.Type = station.Type;
+					newRow.Longitude = station.Longitude;
+					newRow.Latitude = station.Latitude;
+
+					tblStations.AddStationsRow(newRow);
 				}
+				taStation.Update(tblStations);
+
 			}
 		}
 		public static string StopType(string desc)
@@ -82,5 +100,9 @@ namespace tir.data
 			}
 			return "Unknown";
 		}
+
+		private static SqlConnection _sqlConn;
+		private static dsTirCache _dataTables;
+
 	}
 }

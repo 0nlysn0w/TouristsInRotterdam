@@ -8,7 +8,8 @@ SET QUOTED_IDENTIFIER ON
 
 
 CREATE TABLE [dbo].Stations(
-	[Id] INT NOT NULL,
+	[Id] INT IDENTITY NOT NULL,
+	[Name] [nvarchar](max) NOT NULL,
 	[Type] [nvarchar](max) NOT NULL,
 	[Longitude] [nvarchar](max) NOT NULL,
 	[Latitude] [nvarchar](max) NOT NULL,
