@@ -8,9 +8,9 @@ namespace tir.web.Models
 {
 	public class TirContext : DbContext
 	{
-		public TirContext(): base()
+		public TirContext(): base("TirContext")
         {
-			Database.SetInitializer<TirContext>(new CreateDatabaseIfNotExists<TirContext>());
+			Database.Initialize(true);
 		}
 
 		public DbSet<Station> Stations { get; set; }

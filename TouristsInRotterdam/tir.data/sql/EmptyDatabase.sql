@@ -1,0 +1,2 @@
+﻿delete Stations
+delete PointsOfInterest

@@ -7,13 +7,22 @@ using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
 using System.Text.RegularExpressions;
+using tir.web.Models;
 
 namespace tir.data
 {
 	class Program
 	{
+		public static tir.web.Properties.Settings Settings = tir.web.Properties.Settings.Default;
 		static void Main(string[] args)
 		{
+			var databaseConfig = new DatabaseConfiguration(Settings.TirCache);
+
+			databaseConfig.DatabaseBuilder();
+
+			//DataProcessor();
+		}
+		public static void DataProcessor() { 
 			WebClient client = new WebClient();
 
 			byte[] bytes = client.DownloadData(Properties.Settings.Default.SourceURL);
@@ -33,7 +42,7 @@ namespace tir.data
 
 				List<csvStop> csvStops = csv.GetRecords<csvStop>().ToList();
 				List<tir.web.Models.Station> stations = new List<tir.web.Models.Station>();
-				for (int i = 0; i < csvStops.Count; i++)
+				for (int i = 0; i < csvStops.Count(); i++)
 				{
 					csvStops[i].desc = StopType(csvStops[i].desc);
 
