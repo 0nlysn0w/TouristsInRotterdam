@@ -31,11 +31,28 @@ namespace tir.data
 
 				csv.Configuration.Delimiter = ";";
 
-				var stops = csv.GetRecords<Stop>().ToList();
-
-				for (int i = 0; i < stops.Count; i++)
+				List<csvStop> csvStops = csv.GetRecords<csvStop>().ToList();
+				List<tir.web.Models.Station> stations = new List<tir.web.Models.Station>();
+				for (int i = 0; i < csvStops.Count; i++)
 				{
-					stops[i].desc = StopType(stops[i].desc);
+					csvStops[i].desc = StopType(csvStops[i].desc);
+
+					stations.Add(new tir.web.Models.Station()
+					{
+						Name = csvStops[i].name,
+						Type = csvStops[i].desc,
+						Longitude = csvStops[i].longitude,
+						Latitude = csvStops[i].latitude
+					});
+				}
+
+				using (var dbc = new tir.web.Models.TirContext())
+				{
+					foreach (var station in stations)
+					{
+						dbc.Stations.Add(station);
+					}
+					dbc.SaveChanges();
 				}
 			}
 		}
