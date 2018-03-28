@@ -10,9 +10,48 @@
     html, body, .body-content {
         height: 100%;
     }
-</style>
 
-<div id="map"></div>
+    # {
+  float: left;
+  list-style: none;
+  text-align: center;
+  background-color: #000000;
+  margin-right: 30px;
+  width: 150px;
+  line-height: 60px;
+}
+</style>
+<script>
+
+    //Replace placeholder with points of interests from database.
+    var ListOfPointsOfInterests = ["Placeholder"];
+</script>
+<input type="radio" name="PointOfInterest" value="Mark!">
+<label>Walking distance</label>
+<input type="radio" name="PointOfInterest" value="Mark!">
+<label>points of interests from station</label>
+<input type="radio" name="PointOfInterest" value="Mark!">
+<label>Walking time</label>
+
+<!-- Fill this ul with "<li>" + ListOfPointsOfInterests + "</li>" -->
+<div id="SelectablePointsOfInterests" class="col-md-2">
+    <input type="checkbox" name="PointOfInterest" value="Mark!">
+    <label>mac donalds</label>
+    <br>
+    <input type="checkbox" name="PointOfInterest" value="Mark!">
+    <label>Subway</label>
+    <br>
+    <input type="checkbox" name="PointOfInterest" value="Mark!">
+    <label>KFC</label>
+    <br>
+    <input type="checkbox" name="PointOfInterest" value="Mark!">
+    <label>Pathé</label>
+    <br>
+    <input type="checkbox" name="PointOfInterest" value="Mark!">
+    <label>de kuip</label>
+    <br>
+</div>
+<div id="map" class="col-md-10"></div>
 <script>
     var map;
     function initMap() {
