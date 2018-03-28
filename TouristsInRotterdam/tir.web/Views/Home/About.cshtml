@@ -1,7 +1,99 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "Map";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
+<style>
+    #map {
+        height: 80%;
+    }
+
+    html, body, .body-content {
+        height: 100%;
+    }
+
+    # {
+        float: left;
+        list-style: none;
+        text-align: center;
+        background-color: #000000;
+        margin-right: 30px;
+        width: 150px;
+        line-height: 60px;
+    }
+</style>
+<script>
+
+    //Replace placeholder with points of interests from database.
+    var ListOfPointsOfInterests = ["Placeholder"];
+</script>
+<div id="tabButtonsContainer">
+    <button class="btn btn-primary" name="PointOfInterest">Walking distance</button>
+    <button class="btn btn-primary" name="PointOfInterest">points of interests from station</button>
+    <button class="btn btn-primary" name="PointOfInterest">Walking time</button>
+</div>
+<div id="tabContainerWalkingDistance">
+    <!--
+    INFORMATION ON FILLING THE SELECTABLE POINTS OF INTERESTS:
+    Fill the id with "selectablePointsOfInterests" with the data from the database. I'd use a for each point of interest loop:
+        '<input type="checkbox" id=*databaseVariableName* + "CheckBox" class="selectablePointOfInterest" name="PointOfInterest">
+            <label>
+                <script>*databaseVariableName*></script>
+            </label>'
+    -->
+    <div id="selectablePointsOfInterests" class="col-md-2">
+        <input type="checkbox" name="PointOfInterest">
+        <label>mc donald (DUMMY)</label>
+        <br>
+        <input type="checkbox" name="PointOfInterest">
+        <label>Subway (DUMMY)</label>
+        <br>
+        <input type="checkbox" name="PointOfInterest">
+        <label>KFC (DUMMY)</label>
+        <br>
+        <input type="checkbox" name="PointOfInterest">
+        <label>Pathé (DUMMY)</label>
+        <br>
+        <input type="checkbox" name="PointOfInterest">
+        <label>de kuip (DUMMY)</label>
+        <br>
+    </div>
+</div>
+<div id="tabContainerAmountPointsOfInterest" hidden>
+
+</div>
+<div id="tabContainerWalkDistance" hidden>
+
+</div>
+<div id="map" class="col-md-10"></div>
+<script>
+    var map;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 51.9182711, lng: 4.4791135 },
+            zoom: 12
+        });
+
+        // TODO: Set labels from POI type
+        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        // TODO: Add info for hover
+        // TODO: Make clickable for navigation
+        var markers = locations.map(function (location, i) {
+            return new google.maps.Marker({
+                position: location,
+                label: labels[i % labels.length]
+            });
+        });
+
+        var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'img/m' });
+    }
+
+    // TODO: Get locations from DB
+    var locations = [
+        { lat: 51.9244201, lng: 4.4777326 },
+        { lat: 51.9159124, lng: 4.4788838 },
+        { lat: 51.9210251, lng: 4.4787017 }
+    ]
+</script>
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVBgL5foqZkd313a8S7k1gAq7vnkf2v3Q&callback=initMap"></script>

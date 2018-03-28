@@ -22,3 +22,11 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.center-block {
+    float: none !important
+}
+
+#tabButtonsContainer {
+    margin-left: 30%;
+}
