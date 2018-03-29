@@ -58,8 +58,8 @@ namespace tir.data
 					{
 						Name = csvStops[i].name,
 						Type = csvStops[i].desc,
-						Longitude = csvStops[i].longitude,
-						Latitude = csvStops[i].latitude
+						Longitude = csvStops[i].longitude.Replace(",","."),
+						Latitude = csvStops[i].latitude.Replace(",", ".")
 					});
 				}
 				//saving
