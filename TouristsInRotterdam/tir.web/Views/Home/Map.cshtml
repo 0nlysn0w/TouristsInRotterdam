@@ -4,58 +4,21 @@
 
 <style>
     #map {
-        height: 80%;
+        height: 85vh;
     }
-
-    html, body, .body-content {
-        height: 100%;
-    }
-
 </style>
-<script>
 
-    //Replace placeholder with points of interests from database.
-    var ListOfPointsOfInterests = ["Placeholder"];
-</script>
-<div id="tabButtonsContainer">
-    <button class="btn btn-primary" name="PointOfInterest">Walking distance</button>
-    <button class="btn btn-primary" name="PointOfInterest">points of interests from station</button>
-    <button class="btn btn-primary" name="PointOfInterest">Walking time</button>
-</div>
-<div id="tabContainerWalkingDistance">
-    <!-- 
-    INFORMATION ON FILLING THE SELECTABLE POINTS OF INTERESTS:
-    Fill the id with "selectablePointsOfInterests" with the data from the database. I'd use a for each point of interest loop:
-        '<input type="checkbox" id=*databaseVariableName* + "CheckBox" class="selectablePointOfInterest" name="PointOfInterest">
-            <label>
-                <script>*databaseVariableName*></script>
-            </label>'
-    -->
-    <div id="selectablePointsOfInterests" class="col-md-2">
-        <input type="checkbox" name="PointOfInterest">
-        <label>mc donald (DUMMY)</label>
-        <br>
-        <input type="checkbox" name="PointOfInterest">
-        <label>Subway (DUMMY)</label>
-        <br>
-        <input type="checkbox" name="PointOfInterest">
-        <label>KFC (DUMMY)</label>
-        <br>
-        <input type="checkbox" name="PointOfInterest">
-        <label>Pathé (DUMMY)</label>
-        <br>
-        <input type="checkbox" name="PointOfInterest">
-        <label>de kuip (DUMMY)</label>
-        <br>
+<div class="row">
+    <div class="col-lg-2">
+        <button class="btn" name="POI">Walking distance</button>
+        <button class="btn" name="POI">points of interests from station</button>
+        <button class="btn" name="POI">Walking time</button>
+    </div>
+    <div class="col-lg-10">
+        <div id="map"></div>
     </div>
 </div>
-<div id="tabContainerAmountPointsOfInterest" hidden>
 
-</div>
-<div id="tabContainerWalkDistance" hidden>
-
-</div>
-<div id="map" class="col-md-10"></div>
 <script>
     var map;
     function initMap() {
@@ -63,6 +26,9 @@
             center: { lat: 51.9182711, lng: 4.4791135 },
             zoom: 12
         });
+
+        var transitLayer = new google.maps.TransitLayer();
+        transitLayer.setMap(map);
 
         // TODO: Set labels from POI type
         var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
