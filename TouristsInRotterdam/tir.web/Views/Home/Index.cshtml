@@ -3,10 +3,6 @@
 }
 
 <style>
-    html, body, .body-content {
-        height: 100%;
-    }
-
     div.container.body-content {
         background: grey;
         color: white;
@@ -30,8 +26,10 @@
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
+        width: 300px;
         margin: 4px 50%;
         cursor: pointer;
+        transform: translateX(-50%);
     }
 
     .button:hover {
@@ -54,71 +52,5 @@
 
         Cras iaculis porta risus nec gravida. Fusce rutrum odio eget malesuada vulputate. Aliquam vitae porta metus, euismod tristique nulla. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sollicitudin consectetur dolor, vel imperdiet purus scelerisque ac. Donec egestas fermentum malesuada. Phasellus lobortis suscipit leo, et blandit ipsum porttitor vitae. Pellentesque euismod dapibus nisi ac facilisis. Curabitur lobortis, dui sed pellentesque pulvinar, turpis lacus vestibulum orci, eget vestibulum dui nisl a mi.
     </p>
-    <button class="button">Button</button>
+    <button class="button" onclick="window.location.href = '/Home/Map'">Klik hier om verder te gaan</button>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--
-<div id="map"></div>
-<script>
-    var map;
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: 51.9182711, lng: 4.4791135 },
-            zoom: 12
-        });
-
-        // TODO: Set labels from POI type
-        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        // TODO: Add info for hover
-        // TODO: Make clickable for navigation
-        var markers = locations.map(function (location, i) {
-            return new google.maps.Marker({
-                position: location,
-                label: labels[i % labels.length]
-            });
-        });
-
-        var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'img/m' });
-    }
-
-    // TODO: Get locations from DB
-    var locations = [
-        { lat: 51.9244201, lng: 4.4777326 },
-        { lat: 51.9159124, lng: 4.4788838 },
-        { lat: 51.9210251, lng: 4.4787017 }
-    ]
-</script>
-<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVBgL5foqZkd313a8S7k1gAq7vnkf2v3Q&callback=initMap"></script>-->
-=======
-	html, body, .body-content {
-		height: 100%;
-	}
-</style>
-
-<div id="map"></div>
-
-<script src="~/Scripts/MapsFunctions.js"></script>
-
-<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVBgL5foqZkd313a8S7k1gAq7vnkf2v3Q&callback=initMap"></script>
->>>>>>> feature/#7-database
