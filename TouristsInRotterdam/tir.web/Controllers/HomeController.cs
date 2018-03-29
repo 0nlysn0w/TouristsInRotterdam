@@ -13,7 +13,7 @@ namespace tir.web.Controllers
 			return View();
 		}
 
-		public ActionResult About()
+		public ActionResult Map()
 		{
 			ViewBag.Message = "Your application description page.";
 
