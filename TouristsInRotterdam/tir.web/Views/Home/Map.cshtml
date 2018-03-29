@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Map";
+}
+
+<style>
+    #map {
+        height: 85vh;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-2">
+        <button class="btn" name="POI">Walking distance</button>
+        <button class="btn" name="POI">points of interests from station</button>
+        <button class="btn" name="POI">Walking time</button>
+    </div>
+    <div class="col-lg-10">
+        <div id="map"></div>
+    </div>
+</div>
+
+<script>
+    var map;
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 51.9182711, lng: 4.4791135 },
+            zoom: 12
+        });
+
+        var transitLayer = new google.maps.TransitLayer();
+        transitLayer.setMap(map);
+
+        // TODO: Set labels from POI type
+        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        // TODO: Add info for hover
+        // TODO: Make clickable for navigation
+        var markers = locations.map(function (location, i) {
+            return new google.maps.Marker({
+                position: location,
+                label: labels[i % labels.length]
+            });
+        });
+
+        // TODO: Add MarkerCluster images to image folder
+        var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'img/m' });
+    }
+
+    // TODO: Get locations from DB
+    var locations = [
+        { lat: 51.9244201, lng: 4.4777326 },
+        { lat: 51.9159124, lng: 4.4788838 },
+        { lat: 51.9210251, lng: 4.4787017 }
+    ]
+</script>
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVBgL5foqZkd313a8S7k1gAq7vnkf2v3Q&callback=initMap"></script>
