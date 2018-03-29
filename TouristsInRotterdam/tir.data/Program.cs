@@ -7,13 +7,30 @@ using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
 using System.Text.RegularExpressions;
+using tir.web.Models;
+using System.Data.SqlClient;
+using tir.data.dsTirCacheTableAdapters;
 
 namespace tir.data
 {
 	class Program
 	{
+		public Program()
+		{
+			_sqlConn = new SqlConnection(tir.web.Properties.Settings.Default.TirCache);
+			_sqlConn.Open();
+			
+		}
+		public static tir.web.Properties.Settings Settings = tir.web.Properties.Settings.Default;
 		static void Main(string[] args)
 		{
+			var databaseConfig = new DatabaseConfiguration(Settings.TirCache);
+
+			databaseConfig.DatabaseBuilder();
+
+			DataProcessor();
+		}
+		public static void DataProcessor() { 
 			WebClient client = new WebClient();
 
 			byte[] bytes = client.DownloadData(Properties.Settings.Default.SourceURL);
@@ -33,7 +50,7 @@ namespace tir.data
 
 				List<csvStop> csvStops = csv.GetRecords<csvStop>().ToList();
 				List<tir.web.Models.Station> stations = new List<tir.web.Models.Station>();
-				for (int i = 0; i < csvStops.Count; i++)
+				for (int i = 0; i < csvStops.Count(); i++)
 				{
 					csvStops[i].desc = StopType(csvStops[i].desc);
 
@@ -45,15 +62,25 @@ namespace tir.data
 						Latitude = csvStops[i].latitude
 					});
 				}
+				//saving
 
-				using (var dbc = new tir.web.Models.TirContext())
+				_dataTables = new dsTirCache();
+
+				var taStation = new StationsTableAdapter();
+				var tblStations = _dataTables.Stations;
+
+				foreach (var station in stations)
 				{
-					foreach (var station in stations)
-					{
-						dbc.Stations.Add(station);
-					}
-					dbc.SaveChanges();
+					var newRow = tblStations.NewStationsRow();
+					newRow.Name = station.Name;
+					newRow.Type = station.Type;
+					newRow.Longitude = station.Longitude;
+					newRow.Latitude = station.Latitude;
+
+					tblStations.AddStationsRow(newRow);
 				}
+				taStation.Update(tblStations);
+
 			}
 		}
 		public static string StopType(string desc)
@@ -73,5 +100,9 @@ namespace tir.data
 			}
 			return "Unknown";
 		}
+
+		private static SqlConnection _sqlConn;
+		private static dsTirCache _dataTables;
+
 	}
 }
