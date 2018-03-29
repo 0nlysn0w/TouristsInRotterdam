@@ -12,44 +12,57 @@
     }
 
     # {
-  float: left;
-  list-style: none;
-  text-align: center;
-  background-color: #000000;
-  margin-right: 30px;
-  width: 150px;
-  line-height: 60px;
-}
+        float: left;
+        list-style: none;
+        text-align: center;
+        background-color: #000000;
+        margin-right: 30px;
+        width: 150px;
+        line-height: 60px;
+    }
 </style>
 <script>
 
     //Replace placeholder with points of interests from database.
     var ListOfPointsOfInterests = ["Placeholder"];
 </script>
-<input type="radio" name="PointOfInterest" value="Mark!">
-<label>Walking distance</label>
-<input type="radio" name="PointOfInterest" value="Mark!">
-<label>points of interests from station</label>
-<input type="radio" name="PointOfInterest" value="Mark!">
-<label>Walking time</label>
+<div id="tabButtonsContainer">
+    <button class="btn btn-primary" name="PointOfInterest">Walking distance</button>
+    <button class="btn btn-primary" name="PointOfInterest">points of interests from station</button>
+    <button class="btn btn-primary" name="PointOfInterest">Walking time</button>
+</div>
+<div id="tabContainerWalkingDistance">
+    <!-- 
+    INFORMATION ON FILLING THE SELECTABLE POINTS OF INTERESTS:
+    Fill the id with "selectablePointsOfInterests" with the data from the database. I'd use a for each point of interest loop:
+        '<input type="checkbox" id=*databaseVariableName* + "CheckBox" class="selectablePointOfInterest" name="PointOfInterest">
+            <label>
+                <script>*databaseVariableName*></script>
+            </label>'
+    -->
+    <div id="selectablePointsOfInterests" class="col-md-2">
+        <input type="checkbox" name="PointOfInterest">
+        <label>mc donald (DUMMY)</label>
+        <br>
+        <input type="checkbox" name="PointOfInterest">
+        <label>Subway (DUMMY)</label>
+        <br>
+        <input type="checkbox" name="PointOfInterest">
+        <label>KFC (DUMMY)</label>
+        <br>
+        <input type="checkbox" name="PointOfInterest">
+        <label>Pathé (DUMMY)</label>
+        <br>
+        <input type="checkbox" name="PointOfInterest">
+        <label>de kuip (DUMMY)</label>
+        <br>
+    </div>
+</div>
+<div id="tabContainerAmountPointsOfInterest" hidden>
 
-<!-- Fill this ul with "<li>" + ListOfPointsOfInterests + "</li>" -->
-<div id="SelectablePointsOfInterests" class="col-md-2">
-    <input type="checkbox" name="PointOfInterest" value="Mark!">
-    <label>mac donalds</label>
-    <br>
-    <input type="checkbox" name="PointOfInterest" value="Mark!">
-    <label>Subway</label>
-    <br>
-    <input type="checkbox" name="PointOfInterest" value="Mark!">
-    <label>KFC</label>
-    <br>
-    <input type="checkbox" name="PointOfInterest" value="Mark!">
-    <label>Pathé</label>
-    <br>
-    <input type="checkbox" name="PointOfInterest" value="Mark!">
-    <label>de kuip</label>
-    <br>
+</div>
+<div id="tabContainerWalkDistance" hidden>
+
 </div>
 <div id="map" class="col-md-10"></div>
 <script>
