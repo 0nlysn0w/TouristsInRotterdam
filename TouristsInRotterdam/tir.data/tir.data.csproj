@@ -57,6 +57,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="StationInformation.cs" />
     <Compile Include="Stop.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,15 +76,9 @@
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\tir.web\tir.web.csproj">
-      <Project>{12971f93-1e1b-40ca-8ac6-133ff455f552}</Project>
-      <Name>tir.web</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="sql\PointOfInterest.sql">
@@ -93,6 +88,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="sql\EmptyDatabase.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\tir.web\tir.web.csproj">
+      <Project>{12971f93-1e1b-40ca-8ac6-133ff455f552}</Project>
+      <Name>tir.web</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

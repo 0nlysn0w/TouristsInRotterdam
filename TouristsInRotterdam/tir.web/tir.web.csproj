@@ -157,6 +157,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="webTirCache.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>webTirCache.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -198,6 +203,17 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Map.cshtml" />
+    <Content Include="webTirCache.xsc">
+      <DependentUpon>webTirCache.xsd</DependentUpon>
+    </Content>
+    <None Include="webTirCache.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>webTirCache.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="webTirCache.xss">
+      <DependentUpon>webTirCache.xsd</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
