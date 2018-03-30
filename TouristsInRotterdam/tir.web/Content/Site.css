@@ -30,3 +30,22 @@ textarea {
 #tabButtonsContainer {
     margin-left: 30%;
 }
+
+#searchRadiusContainer {
+    margin-bottom: 10px;
+    font-weight: bold; 
+}
+
+#stationSelectionContainer {
+    margin-bottom: 10px;
+    font-weight: bold; 
+}
+
+.stationSelectionContainer {
+    margin: 15px;
+    font-weight: bold;
+}
+
+#walkingDistanceDirectionNotation{
+    
+}
