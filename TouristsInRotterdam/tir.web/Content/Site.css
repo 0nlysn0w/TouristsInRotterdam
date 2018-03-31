@@ -31,6 +31,7 @@ textarea {
     margin-left: 30%;
 }
 
+<<<<<<< HEAD
 #overflow {
     overflow-y: visible;
     overflow-x: hidden;
@@ -80,4 +81,23 @@ p {
 
 .button:hover {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+=======
+#searchRadiusContainer {
+    margin-bottom: 10px;
+    font-weight: bold; 
+}
+
+#stationSelectionContainer {
+    margin-bottom: 10px;
+    font-weight: bold; 
+}
+
+.stationSelectionContainer {
+    margin: 15px;
+    font-weight: bold;
+}
+
+#walkingDistanceDirectionNotation{
+    
+>>>>>>> feature/#8-design
 }
