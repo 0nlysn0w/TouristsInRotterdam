@@ -166,16 +166,20 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\train.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\bus.png" />
+    <Content Include="Images\help.png" />
     <Content Include="Images\m1.png" />
     <Content Include="Images\m2.png" />
     <Content Include="Images\m3.png" />
     <Content Include="Images\m4.png" />
     <Content Include="Images\m5.png" />
+    <Content Include="Images\metro.png" />
+    <Content Include="Images\train.png" />
+    <Content Include="Images\tram.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">

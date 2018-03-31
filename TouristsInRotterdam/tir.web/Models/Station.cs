@@ -34,7 +34,8 @@ namespace tir.web.Models
 
 			for (int i = 0; i < tblStations.Count; i++)
 			{
-				stationArray += string.Format(@"[""{0}"",""<strong>{0}</strong><p>{1}</p>"",{2},{3},{4}]",
+				//six positions
+				stationArray += string.Format(@"[""{0}"",""<strong>{0}</strong><p>{1}</p>"",{2},{3},{4},""{1}""]",
 					tblStations[i].Name,
 					tblStations[i].Type,
 					tblStations[i].Latitude,
