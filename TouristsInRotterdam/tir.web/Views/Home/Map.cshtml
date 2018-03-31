@@ -31,6 +31,8 @@
             zoom: 12
 		});
 
+		var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
 		infowindow = new google.maps.InfoWindow();
 
         var transitLayer = new google.maps.TransitLayer();
@@ -41,6 +43,7 @@
 			var marker = new google.maps.Marker({
 				position: position,
 				map: map,
+				icon: '@Url.Content("../Content/train.png")'
 			});
 			google.maps.event.addListener(marker, 'click', (function (marker, i) {
 				return function () {
@@ -54,9 +57,10 @@
 			Markers[locations[i][4]] = marker;
 		}
 
+		var markerCluster = new MarkerClusterer(map, Markers, { imagePath: '@Url.Content("../Images/m")' });
+
 		//Goes to location where the markers are
 		locate(0);
-
 	}
 
   //      // TODO: Set labels from POI type
