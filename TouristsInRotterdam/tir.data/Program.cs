@@ -62,6 +62,11 @@ namespace tir.data
 						Latitude = csvStops[i].latitude.Replace(",", ".")
 					});
 				}
+
+				stations = stations.
+					GroupBy(o => new { o.Name, o.Type })
+					.Select(o => o.FirstOrDefault())
+					.ToList();
 				//saving
 
 				_dataTables = new dsTirCache();
