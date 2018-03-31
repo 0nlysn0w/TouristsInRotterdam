@@ -215,31 +215,88 @@
 <div id="map" class="col-md-10"></div>
 >>>>>>> feature/#8-design
 <script>
-    var map;
+	var map;
+	var Markers = {};
+	var infoWindow;
+	var locations = @Html.Raw(tir.web.Models.Station.GetLocations());
+
+	function appropriateIcon(type) {
+		console.log(type)
+		if (type == "Bus") {
+			return '@Url.Content("../Images/bus.png")'
+		} else if (type == "Metro") {
+			return '@Url.Content("../Images/metro.png")'
+		} else if (type == "Trein") {
+			return '@Url.Content("../Images/train.png")'
+		} else if (type == "Tram") {
+			return '@Url.Content("../Images/tram.png")'
+		} else {
+			return '@Url.Content("../Images/help.png")'
+		}
+	}
+
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 51.9182711, lng: 4.4791135 },
             zoom: 12
-        });
+		});
+
+		var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+		infowindow = new google.maps.InfoWindow();
 
         var transitLayer = new google.maps.TransitLayer();
-        transitLayer.setMap(map);
+		transitLayer.setMap(map);
 
-        // TODO: Set labels from POI type
-        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		for (i = 0; i < locations.length; i++) {
+			var position = new google.maps.LatLng(locations[i][2], locations[i][3]);
+			var marker = new google.maps.Marker({
+				position: position,
+				map: map,
+				icon: appropriateIcon(locations[i][5])
+			});
+			google.maps.event.addListener(marker, 'click', (function (marker, i) {
+				return function () {
+					infowindow.setContent(locations[i][1]);
+					infowindow.setOptions({ maxWidth: 200 });
+					infowindow.open(map, marker);
+				}
+			})(marker, i));
 
-        // TODO: Add info for hover
-        // TODO: Make clickable for navigation
-        var markers = locations.map(function (location, i) {
-            return new google.maps.Marker({
-                position: location,
-                label: labels[i % labels.length]
-            });
-        });
+			//helps locate
+			Markers[locations[i][4]] = marker;
+		}
 
-        // TODO: Add MarkerCluster images to image folder
-        var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'img/m' });
-    }
+		var markerCluster = new MarkerClusterer(map, Markers, { imagePath: '@Url.Content("../Images/m")' });
+
+		//Goes to location where the markers are
+		locate(0);
+	}
+
+  //      // TODO: Set labels from POI type
+  //      var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  //      // TODO: Add info for hover
+  //      // TODO: Make clickable for navigation
+  //      var markers = locations.map(function (location, i) {
+  //          return new google.maps.Marker({
+  //              position: location,
+  //              label: labels[i % labels.length]
+  //          });
+  //      });
+
+  //      // TODO: Add MarkerCluster images to image folder
+		//var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'img/m' });
+
+	function locate(marker_id) {
+		var myMarker = Markers[marker_id];
+		var markerPosition = myMarker.getPosition();
+		map.setCenter(markerPosition);
+		google.maps.event.trigger(myMarker, 'click');
+	}
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+
 
     // TODO: Get locations from DB
     var locations = [
