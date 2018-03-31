@@ -28,13 +28,17 @@ namespace tir.data
 
 			databaseConfig.DatabaseBuilder();
 
-			DataProcessor();
+			foreach (var DataSource in Properties.Settings.Default.DataSources)
+			{
+				WebClient client = new WebClient();
+				byte[] bytes = client.DownloadData(DataSource);
+
+				DataProcessor(bytes);
+			}
+
 		}
-		public static void DataProcessor() { 
-			WebClient client = new WebClient();
-
-			byte[] bytes = client.DownloadData(Properties.Settings.Default.SourceURL);
-
+		public static void DataProcessor(byte[] bytes) { 
+			
 			var resultString = Encoding.Default.GetString(bytes);
 
 			using (var stream = new MemoryStream())
