@@ -104,21 +104,20 @@
 		}
 
 		for (var i = 0; i < results.length; i++) {
-			var placeLoc = results[i].geometry.location;
-			var marker = new google.maps.Marker({
-				position: placeLoc,
-				map: map
-			});
-			google.maps.event.addListener(marker, 'click', function () {
-				infowindow.setContent(results[i].name);
-				infowindow.open(map, marker);
-			});
+			createMarker(results[i]);
+		}	
+	}
 
-			PoiMarkers.push(marker);
-
-		}
-		console.log(PoiMarkers);
-		
+	function createMarker(place) {
+		var marker = new google.maps.Marker({
+			position: place.geometry.location,
+			map: map
+		});
+		google.maps.event.addListener(marker, 'click', function () {
+			infowindow.setContent(place.name);
+			infowindow.open(map, marker);
+		});
+		PoiMarkers.push(marker);
 	}
 
 	var tirStyle = [
