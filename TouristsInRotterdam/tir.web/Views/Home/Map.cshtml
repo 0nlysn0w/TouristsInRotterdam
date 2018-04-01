@@ -23,6 +23,8 @@
 		</div>
 		<h3>Selected station</h3>
 		<div id="SelectedStation"></div>
+		<h3>Selected station</h3>
+		<ul id="results"></ul>
     </div>
     <div class="col-lg-10">
         <div id="map"></div>
@@ -81,16 +83,15 @@
 
 			StationMarkers[locations[i][4]] = marker;
 		}
-
 		var markerCluster = new MarkerClusterer(map, StationMarkers, { imagePath: '@Url.Content("../Images/m")' });
-
 	}
 
 	function nearbyPlaces(givenStation) {
 		var service = new google.maps.places.PlacesService(map);
 		service.nearbySearch({
 			location: { lat: givenStation[2], lng: givenStation[3] },
-			radius: 500
+			radius: 500,
+			type: 'atm'
 		}, callback);
 	}
 
@@ -102,13 +103,18 @@
 			}
 			PoiMarkers = [];
 		}
+		var placesList = document.getElementById('results');
+
+		while (placesList.firstChild) {
+			placesList.removeChild(placesList.firstChild);
+		}
 
 		for (var i = 0; i < results.length; i++) {
-			createMarker(results[i]);
+			createMarker(results[i], placesList);
 		}	
 	}
 
-	function createMarker(place) {
+	function createMarker(place, placesList) {
 		var marker = new google.maps.Marker({
 			position: place.geometry.location,
 			map: map
@@ -117,6 +123,11 @@
 			infowindow.setContent(place.name);
 			infowindow.open(map, marker);
 		});
+
+		var li = document.createElement('li');
+		li.textContent = place.name;
+		placesList.appendChild(li);
+
 		PoiMarkers.push(marker);
 	}
 
