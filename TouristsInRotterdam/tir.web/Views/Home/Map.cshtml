@@ -10,9 +10,19 @@
 
 <div class="row">
     <div class="col-lg-2">
-        <button class="btn" name="POI">Walking distance</button>
-        <button class="btn" name="POI">points of interests from station</button>
-        <button class="btn" name="POI">Walking time</button>
+		<div class="col-lg-10 btn-group" data-toggle="buttons">
+			<label class="btn btn-info">
+				<input type="radio" name="modus" id="one" autocomplete="off" checked/> Nearby POI's
+			</label>
+			<label class="btn btn-info active">
+				<input type="radio" name="modus" id="two" autocomplete="off" /> Walking distance
+			</label>
+			<label class="btn btn-info">
+				<input type="radio" name="modus" id="three" autocomplete="off" /> Walking time
+			</label>
+		</div>
+		<h3>Selected station</h3>
+		<div id="SelectedStation"></div>
     </div>
     <div class="col-lg-10">
         <div id="map"></div>
@@ -26,7 +36,6 @@
 	var locations = @Html.Raw(tir.web.Models.Station.GetLocations());
 
 	function appropriateIcon(type) {
-		console.log(type)
 		if (type == "Bus") {
 			return '@Url.Content("../Images/bus.png")'
 		} else if (type == "Metro") {
@@ -43,10 +52,9 @@
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 51.9182711, lng: 4.4791135 },
-            zoom: 12
+			zoom: 12,
+			styles: tirStyle
 		});
-
-		var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 		infowindow = new google.maps.InfoWindow();
 
@@ -65,50 +73,107 @@
 					infowindow.setContent(locations[i][1]);
 					infowindow.setOptions({ maxWidth: 200 });
 					infowindow.open(map, marker);
+					document.getElementById('SelectedStation').innerHTML = locations[i][5] + ": " + locations[i][0];
+					nearbyPlaces(locations[i]);
 				}
 			})(marker, i));
 
-			//helps locate
 			Markers[locations[i][4]] = marker;
 		}
 
 		var markerCluster = new MarkerClusterer(map, Markers, { imagePath: '@Url.Content("../Images/m")' });
 
-		//Goes to location where the markers are
-		locate(0);
 	}
 
-  //      // TODO: Set labels from POI type
-  //      var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-  //      // TODO: Add info for hover
-  //      // TODO: Make clickable for navigation
-  //      var markers = locations.map(function (location, i) {
-  //          return new google.maps.Marker({
-  //              position: location,
-  //              label: labels[i % labels.length]
-  //          });
-  //      });
-
-  //      // TODO: Add MarkerCluster images to image folder
-		//var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'img/m' });
-
-	function locate(marker_id) {
-		var myMarker = Markers[marker_id];
-		var markerPosition = myMarker.getPosition();
-		map.setCenter(markerPosition);
-		google.maps.event.trigger(myMarker, 'click');
+	function nearbyPlaces(givenStation) {
+		var service = new google.maps.places.PlacesService(map);
+		service.nearbySearch({
+			location: { lat: givenStation[2], lng: givenStation[3] },
+			radius: 500
+		}, callback);
 	}
 
-	google.maps.event.addDomListener(window, 'load', initialize);
+	function callback(results, status) {
+		if (status === google.maps.places.PlacesServiceStatus.OK) {
+			for (var i = 0; i < results.length; i++) {
+				createMarker(results[i]);
+			}
+		}
+	}
 
+	function createMarker(place) {
+		var placeLoc = place.geometry.location;
+		var marker = new google.maps.Marker({
+			map: map,
+			position: place.geometry.location
+		});
 
-    // TODO: Get locations from DB
-    var locations = [
-        { lat: 51.9244201, lng: 4.4777326 },
-        { lat: 51.9159124, lng: 4.4788838 },
-        { lat: 51.9210251, lng: 4.4787017 }
-    ]
+		google.maps.event.addListener(marker, 'click', function () {
+			infowindow.setContent(place.name);
+			infowindow.open(map, this);
+		});
+	}
+
+	var tirStyle = [
+		{
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "administrative.land_parcel",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "administrative.neighborhood",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "transit",
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "transit",
+			"elementType": "labels.text",
+			"stylers": [
+				{
+					"color": "#ffeb3b"
+				},
+				{
+					"visibility": "off"
+				},
+				{
+					"weight": 2
+				}
+			]
+		},
+		{
+			"featureType": "transit.station.airport",
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		}
+	]
+
 </script>
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVBgL5foqZkd313a8S7k1gAq7vnkf2v3Q&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVBgL5foqZkd313a8S7k1gAq7vnkf2v3Q&libraries=places&callback=initMap"></script>
