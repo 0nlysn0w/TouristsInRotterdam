@@ -23,7 +23,7 @@
 		</div>
 		<h3>Selected station</h3>
 		<div id="SelectedStation"></div>
-		<h3>Selected station</h3>
+		<h3>Places:</h3>
 		<ul id="results"></ul>
     </div>
     <div class="col-lg-10">
@@ -61,8 +61,11 @@
 
 		infowindow = new google.maps.InfoWindow();
 
+		//var directionsService = new google.maps.DirectionsService;
+		//var directionsDisplay = new google.maps.DirectionsRenderer;
         var transitLayer = new google.maps.TransitLayer();
 		transitLayer.setMap(map);
+		//directionsDisplay.setMap(map);
 
 		for (i = 0; i < locations.length; i++) {
 			var position = new google.maps.LatLng(locations[i][2], locations[i][3]);
@@ -76,7 +79,14 @@
 					infowindow.setContent(locations[i][1]);
 					infowindow.setOptions({ maxWidth: 200 });
 					infowindow.open(map, marker);
-					document.getElementById('SelectedStation').innerHTML = locations[i][5] + ": " + locations[i][0];
+					var span = document.createElement('span');
+					var station = document.getElementById('SelectedStation')
+					span.textContent = locations[i][5] + ": " + locations[i][0];
+					span.id = locations[i][2] + ", " + locations[i][3];
+					while (station.firstChild) {
+						station.removeChild(station.firstChild);
+					}
+					station.appendChild(span);
 					nearbyPlaces(locations[i]);
 				}
 			})(marker, i));
@@ -86,6 +96,21 @@
 		var markerCluster = new MarkerClusterer(map, StationMarkers, { imagePath: '@Url.Content("../Images/m")' });
 	}
 
+	function route(directionsService, directionsDisplay, clickedDest) {
+		console.log(clickedDest)
+		directionsService.route({
+			origin: document.getElementById('SelectedStation').firstChild.id,
+			destination: clickedDest,
+			travelMode: 'WALKING'
+		}, function (response, status) {
+			if (status === 'OK') {
+				directionsDisplay.setDirections(response);
+			} else {
+				window.alert('Directions request failed due to ' + status);
+			}
+			});
+		directionsDisplay.setMap(map);
+	}
 	function nearbyPlaces(givenStation) {
 		var service = new google.maps.places.PlacesService(map);
 		service.nearbySearch({
@@ -96,7 +121,6 @@
 	}
 
 	function callback(results) {
-		console.log("=>" + PoiMarkers.length)
 		if (PoiMarkers.length > 0) {
 			for (var i = 0; i < PoiMarkers.length; i++) {
 				PoiMarkers[i].setMap(null);
@@ -115,17 +139,23 @@
 	}
 
 	function createMarker(place, placesList) {
+		var directionsService = new google.maps.DirectionsService;
+		var directionsDisplay = new google.maps.DirectionsRenderer;
+
 		var marker = new google.maps.Marker({
 			position: place.geometry.location,
 			map: map
 		});
+
 		google.maps.event.addListener(marker, 'click', function () {
 			infowindow.setContent(place.name);
 			infowindow.open(map, marker);
+			route(directionsService, directionsDisplay, place.geometry.location);
 		});
 
 		var li = document.createElement('li');
 		li.textContent = place.name;
+		li.id = place.place_id;
 		placesList.appendChild(li);
 
 		PoiMarkers.push(marker);
@@ -193,4 +223,4 @@
 
 </script>
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVBgL5foqZkd313a8S7k1gAq7vnkf2v3Q&libraries=places&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAC5aRtEa7uLiQkBht9xzShPxRnwsjxHs&libraries=places&callback=initMap"></script>
