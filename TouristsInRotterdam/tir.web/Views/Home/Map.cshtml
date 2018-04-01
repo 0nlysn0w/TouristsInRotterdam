@@ -11,10 +11,10 @@
 <div class="row">
     <div class="col-lg-2">
 		<div class="col-lg-10 btn-group" data-toggle="buttons">
-			<label class="btn btn-info">
-				<input type="radio" name="modus" id="one" autocomplete="off" checked/> Nearby POI's
-			</label>
 			<label class="btn btn-info active">
+				<input type="radio" name="modus" id="one" autocomplete="off" checked /> Nearby POI's
+			</label>
+			<label class="btn btn-info">
 				<input type="radio" name="modus" id="two" autocomplete="off" /> Walking distance
 			</label>
 			<label class="btn btn-info">
@@ -31,7 +31,8 @@
 
 <script>
 	var map;
-	var Markers = {};
+	var StationMarkers = {};
+	var PoiMarkers = [];
 	var infoWindow;
 	var locations = @Html.Raw(tir.web.Models.Station.GetLocations());
 
@@ -78,10 +79,10 @@
 				}
 			})(marker, i));
 
-			Markers[locations[i][4]] = marker;
+			StationMarkers[locations[i][4]] = marker;
 		}
 
-		var markerCluster = new MarkerClusterer(map, Markers, { imagePath: '@Url.Content("../Images/m")' });
+		var markerCluster = new MarkerClusterer(map, StationMarkers, { imagePath: '@Url.Content("../Images/m")' });
 
 	}
 
@@ -93,25 +94,31 @@
 		}, callback);
 	}
 
-	function callback(results, status) {
-		if (status === google.maps.places.PlacesServiceStatus.OK) {
-			for (var i = 0; i < results.length; i++) {
-				createMarker(results[i]);
+	function callback(results) {
+		console.log("=>" + PoiMarkers.length)
+		if (PoiMarkers.length > 0) {
+			for (var i = 0; i < PoiMarkers.length; i++) {
+				PoiMarkers[i].setMap(null);
 			}
+			PoiMarkers = [];
 		}
-	}
 
-	function createMarker(place) {
-		var placeLoc = place.geometry.location;
-		var marker = new google.maps.Marker({
-			map: map,
-			position: place.geometry.location
-		});
+		for (var i = 0; i < results.length; i++) {
+			var placeLoc = results[i].geometry.location;
+			var marker = new google.maps.Marker({
+				position: placeLoc,
+				map: map
+			});
+			google.maps.event.addListener(marker, 'click', function () {
+				infowindow.setContent(results[i].name);
+				infowindow.open(map, marker);
+			});
 
-		google.maps.event.addListener(marker, 'click', function () {
-			infowindow.setContent(place.name);
-			infowindow.open(map, this);
-		});
+			PoiMarkers.push(marker);
+
+		}
+		console.log(PoiMarkers);
+		
 	}
 
 	var tirStyle = [
