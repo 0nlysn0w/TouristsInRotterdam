@@ -263,6 +263,20 @@
         });
     }
 
+    function drawRoute(directionsService, directionsDisplay, clickedDest) {
+        directionsService.route({
+            origin: document.getElementById('SelectedStation').firstChild.id,
+            destination: clickedDest.geometry.location,
+            travelMode: 'WALKING'
+        }, function (response, status) {
+            if (status === 'OK') {
+                directionsDisplay.setDirections(response)
+            } else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+    }
+
 	function nearbyPlaces(givenStation) {
 		var service = new google.maps.places.PlacesService(map);
 		service.nearbySearch({
@@ -306,7 +320,7 @@
 		google.maps.event.addListener(marker, 'click', function () {
 			infowindow.setContent(place.name);
 			infowindow.open(map, marker);
-			route(directionsService, directionsDisplay, place.geometry.location);
+			drawRoute(directionsService, directionsDisplay, place);
         });
 
         //Get route and add it's distance and duration to the list
