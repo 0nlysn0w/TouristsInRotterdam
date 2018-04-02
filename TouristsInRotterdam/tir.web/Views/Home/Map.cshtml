@@ -169,7 +169,16 @@
 			<h3>Selected station</h3>
 			<div id="SelectedStation"></div>
 			<h3>Places:</h3>
-			<ul id="results"></ul>
+			<table class="table table-sm">
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Distance</th>
+					<th scope="col">Time</th>
+				</tr>
+				<tbody id="results">
+
+				</tbody>
+			</table>
 		</div>
 		<div id="map" class="col-md-9"></div>
 	</div>
@@ -184,6 +193,7 @@
 	var locations = @Html.Raw(tir.web.Models.Station.GetLocations());
 	var directionsService;
 	var directionsDisplay;
+	var placesList = document.getElementById('results');
 
 	function appropriateIcon(type) {
 		if (type == "Bus") {
@@ -209,11 +219,8 @@
 		directionsService = new google.maps.DirectionsService;
 		directionsDisplay = new google.maps.DirectionsRenderer;
 
-
 		infowindow = new google.maps.InfoWindow();
 
-		//var directionsService = new google.maps.DirectionsService;
-		//var directionsDisplay = new google.maps.DirectionsRenderer;
         var transitLayer = new google.maps.TransitLayer();
 		transitLayer.setMap(map);
 		directionsDisplay.setMap(map);
@@ -277,18 +284,25 @@
 			}
 			PoiMarkers = [];
 		}
-		var placesList = document.getElementById('results');
 
 		while (placesList.firstChild) {
 			placesList.removeChild(placesList.firstChild);
 		}
 
 		for (var i = 0; i < results.length; i++) {
-			createMarker(results[i], placesList);
+			createMarker(results[i]);
 		}	
 	}
 
-	function createMarker(place, placesList) {
+	function routeInfo(directionsService, clickedDest) {
+		return directionsService.route({
+			origin: document.getElementById('SelectedStation').firstChild.id,
+			destination: clickedDest,
+			travelMode: 'WALKING'
+		});
+	}
+
+	function createMarker(place) {
 		var marker = new google.maps.Marker({
 			position: place.geometry.location,
 			map: map
@@ -300,10 +314,17 @@
 			route(directionsService, directionsDisplay, place.geometry.location);
 		});
 
-		var li = document.createElement('li');
-		li.textContent = place.name;
-		li.id = place.place_id;
-		placesList.appendChild(li);
+		var row = placesList.insertRow(0);
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
+		cell1.innerHTML = place.name;
+		cell2.innerHTML = "PLACEHOLDER"
+		cell3.innerHTML = "PLACEHOLDER"
+
+		//li.textContent = place.name;
+		//li.id = place.place_id;
+		placesList.appendChild(row);
 
 		PoiMarkers.push(marker);
 	}
