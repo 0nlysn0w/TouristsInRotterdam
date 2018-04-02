@@ -247,20 +247,23 @@
 		var markerCluster = new MarkerClusterer(map, StationMarkers, { imagePath: '@Url.Content("../Images/m")' });
 	}
 
-	function route(directionsService, directionsDisplay, clickedDest) {
-		directionsService.route({
-			origin: document.getElementById('SelectedStation').firstChild.id,
-			destination: clickedDest,
-			travelMode: 'WALKING'
-		}, function (response, status) {
-			if (status === 'OK') {
-				console.log(response)
-				directionsDisplay.setDirections(response);
-			} else {
-				window.alert('Directions request failed due to ' + status);
-			}
-			});
-	}
+    function route(directionsService, directionsDisplay, clickedDest) {
+        directionsService.route({
+            origin: document.getElementById('SelectedStation').firstChild.id,
+            destination: clickedDest.geometry.location,
+            travelMode: 'WALKING'
+        }, function (response, status) {
+            if (status === 'OK') {
+                var destination = clickedDest.name
+                var distance = response["routes"][0]["legs"][0]["distance"]["text"]
+                var duration = response["routes"][0]["legs"][0]["duration"]["text"]
+                console.log([destination, distance, duration])
+            } else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+    }
+
 	function nearbyPlaces(givenStation) {
 		var service = new google.maps.places.PlacesService(map);
 		service.nearbySearch({
@@ -298,7 +301,10 @@
 			infowindow.setContent(place.name);
 			infowindow.open(map, marker);
 			route(directionsService, directionsDisplay, place.geometry.location);
-		});
+        });
+
+        //Get route and add it's distance and duration to the list
+        route(directionsService, directionsDisplay, place)
 
 		var li = document.createElement('li');
 		li.textContent = place.name;
