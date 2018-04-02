@@ -28,13 +28,17 @@ namespace tir.data
 
 			databaseConfig.DatabaseBuilder();
 
-			DataProcessor();
+			foreach (var DataSource in Properties.Settings.Default.DataSources)
+			{
+				WebClient client = new WebClient();
+				byte[] bytes = client.DownloadData(DataSource);
+
+				DataProcessor(bytes);
+			}
+
 		}
-		public static void DataProcessor() { 
-			WebClient client = new WebClient();
-
-			byte[] bytes = client.DownloadData(Properties.Settings.Default.SourceURL);
-
+		public static void DataProcessor(byte[] bytes) { 
+			
 			var resultString = Encoding.Default.GetString(bytes);
 
 			using (var stream = new MemoryStream())
@@ -54,14 +58,23 @@ namespace tir.data
 				{
 					csvStops[i].desc = StopType(csvStops[i].desc);
 
-					stations.Add(new tir.web.Models.Station()
+					if (csvStops[i].desc != "Unknown")
 					{
-						Name = csvStops[i].name,
-						Type = csvStops[i].desc,
-						Longitude = csvStops[i].longitude.Replace(",","."),
-						Latitude = csvStops[i].latitude.Replace(",", ".")
-					});
+						stations.Add(new tir.web.Models.Station()
+						{
+							Name = csvStops[i].name,
+							Type = csvStops[i].desc,
+							Longitude = csvStops[i].longitude.Replace(",","."),
+							Latitude = csvStops[i].latitude.Replace(",", ".")
+						});
+					}
+
 				}
+
+				stations = stations.
+					GroupBy(o => new { o.Name, o.Type })
+					.Select(o => o.FirstOrDefault())
+					.ToList();
 				//saving
 
 				_dataTables = new dsTirCache();

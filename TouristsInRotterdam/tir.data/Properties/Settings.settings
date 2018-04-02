@@ -2,8 +2,12 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="tir.data.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="SourceURL" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://www.rotterdamopendata.nl/storage/f/2013-04-17T140812/RET-haltebestand.csv</Value>
+    <Setting Name="DataSources" Type="System.Collections.Specialized.StringCollection" Scope="Application">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;http://www.rotterdamopendata.nl/storage/f/2013-04-17T140812/RET-haltebestand.csv&lt;/string&gt;
+  &lt;string&gt;https://raw.githubusercontent.com/0nlysn0w/TouristsInRotterdam/master/train-dataset.csv&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
     </Setting>
     <Setting Name="TirCache" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
