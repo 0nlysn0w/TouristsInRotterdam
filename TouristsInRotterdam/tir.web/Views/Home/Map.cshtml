@@ -3,33 +3,178 @@
 }
 
 <style>
+    body {
+        overflow: hidden;
+    }
+
+    .space {
+        margin-bottom: 25px;
+    }
+
     #map {
         height: 85vh;
     }
+	.container {
+		max-width: 100%;
+	}
+
+	.modus-toggle {
+		width: 100%;
+		margin: 20px auto 20px auto;
+	}
+
 </style>
 
-<div class="row">
-    <div class="col-lg-2">
-		<div class="col-lg-10 btn-group" data-toggle="buttons">
-			<label class="btn btn-info active">
-				<input type="radio" name="modus" id="one" autocomplete="off" checked /> Nearby POI's
-			</label>
-			<label class="btn btn-info">
-				<input type="radio" name="modus" id="two" autocomplete="off" /> Walking distance
-			</label>
-			<label class="btn btn-info">
-				<input type="radio" name="modus" id="three" autocomplete="off" /> Walking time
-			</label>
-		</div>
-		<h3>Selected station</h3>
-		<div id="SelectedStation"></div>
-		<h3>Places:</h3>
-		<ul id="results"></ul>
-    </div>
-    <div class="col-lg-10">
-        <div id="map"></div>
+@*<!--
+    Start of the second tab: The total points of interests the user is interested in.    
+-->
+<div id="tabContainerAmountPointsOfInterest" hidden>
+    <div id="leftSelectablesContainer"  class="col-md-2">
+        <!--
+            the radius in kilometers
+        -->
+        <div id="searchRadiusContainer">
+            <span>Radius: </span>
+            <br />
+            <select id="radiusSelectionInKm">
+                <option value="0.5">0.5 km</option>
+                <option value="1">1 km</option>
+                <option value="2">2 km</option>
+                <option value="3">3 km</option>
+                <option value="4">4 km</option>
+                <option value="5">5 km</option>
+                <option value="10">10 km</option>
+                <option value="15">15 km</option>
+                <option value="20">20 km</option>
+            </select>
+        </div>
+
+        <!--
+            The center point of the radius (the location)    
+        -->
+
+        <div id="centerPointStationSelectionContainer">
+            <span>Station: </span>
+            <select id="centerPointStationSelection">
+                <!-- **6 -->
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+            </select>
+        </div>
+
+        <!--
+        **2
+        INFORMATION ON FILLING THE SELECTABLE POINTS OF INTERESTS:
+        Fill the id with "selectablePointsOfInterests" with the data from the database. I'd use a for each point of interest loop:
+            '<input type="checkbox" id=*databaseVariableName* + "CheckBox" class="selectablePointOfInterest" name="PointOfInterest">
+                <label>
+                    <script>*databaseVariableName*></script>
+                </label>'
+        -->
+
+        <div id="selectablePointsOfInterests">
+            <input type="checkbox" name="PointOfInterest">
+            <label>mc donald (DUMMY)</label>
+            <br>
+            <input type="checkbox" name="PointOfInterest">
+            <label>Subway (DUMMY)</label>
+            <br>
+            <input type="checkbox" name="PointOfInterest">
+            <label>KFC (DUMMY)</label>
+            <br>
+            <input type="checkbox" name="PointOfInterest">
+            <label>Pathé (DUMMY)</label>
+            <br>
+            <input type="checkbox" name="PointOfInterest">
+            <label>de kuip (DUMMY)</label>
+            <br>
+        </div>
     </div>
 </div>
+
+<!--
+    Start of the third tab: the walking time from point A to B.
+-->
+<div id="tabContainerWalkTime">
+    <div id="tabContainerWalkingTime">
+        <div class="col-md-1"></div>
+        <div id="StartStationSelectionContainerWalkingTime" class="col-md-6 stationSelectionContainer">
+            <span>Start place: </span>
+            <select id="startStationSelectionWalkingTime">
+                <!-- **7 -->
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+            </select>
+        </div>
+
+        <div id="destinationStationSelectionContainerWalkingTime" class="col-md-4 stationSelectionContainer">
+            <span>Desired place: </span>
+            <select id="destinationStationSelectionWalkingTime">
+                <!-- **8 -->
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
+            </select>
+        </div>
+        <div id="walkingTimeDirectionNotation" class="col-md-2">
+            <!-- **9 -->
+            <span>direction x DUMMY</span>
+            <br />
+            <br />
+            <span>direction x DUMMY</span>
+            <br />
+            <br />
+            <span>direction x DUMMY</span>
+            <br />
+            <br />
+            <span>direction x DUMMY</span>
+            <br />
+            <br />
+            <span>direction x DUMMY</span>
+            <br />
+            <br />
+            <span>direction x DUMMY</span>
+            <br />
+            <br />
+            <span>direction x DUMMY</span>
+            <br />
+            <br />
+        </div>
+    </div>
+</div>*@
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="btn-group modus-toggle" data-toggle="buttons">
+				<label class="btn btn-info active">
+					<input type="radio" name="modus" id="one" autocomplete="off" checked /> Nearby POI's
+				</label>
+				<label class="btn btn-info">
+					<input type="radio" name="modus" id="two" autocomplete="off" /> Walking distance
+				</label>
+				<label class="btn btn-info">
+					<input type="radio" name="modus" id="three" autocomplete="off" /> Walking time
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<h3>Selected station</h3>
+			<div id="SelectedStation"></div>
+			<h3>Places:</h3>
+			<ul id="results"></ul>
+		</div>
+		<div id="map" class="col-md-9"></div>
+	</div>
+</div>
+
 
 <script>
 	var map;

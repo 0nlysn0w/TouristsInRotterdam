@@ -3,6 +3,9 @@
 }
 
 <style>
+    body {
+        overflow: hidden;
+    }
     div.container.body-content {
         background: grey;
         color: white;
@@ -43,14 +46,26 @@
     We offer you a lot of public transport routes, fastfood restaurants and ofcourse the points of interests you should not miss while staying in Rotterdam.</p>
 </div>
 <hr />
-<div>
+<div id="overflow">
     <p>
-        Allemaal uitleg en shit zoals bijvoorbeeld het lorem ipsum <br />
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pharetra, nisi et vulputate tempus, purus neque sodales metus, id mollis orci mauris ut mauris. Nulla dignissim ipsum nisl. Fusce quis iaculis ante. Suspendisse porttitor erat congue volutpat varius. Curabitur quam tellus, lobortis eu blandit ut, finibus quis libero. Integer a lorem efficitur, consectetur risus ac, pharetra libero. Phasellus ut erat in lectus vehicula hendrerit. Integer eu dolor vel mauris viverra tempor. Mauris tempus odio a elementum porta. Sed auctor elementum sapien at scelerisque. Mauris et porta sem. Curabitur vel pharetra ipsum. Ut facilisis dignissim ultricies. Quisque tincidunt dolor ut diam consectetur lobortis.
-
-        Nam semper blandit augue, ut aliquet tellus suscipit non. Aliquam vitae velit sollicitudin, fermentum turpis quis, pretium risus. Nam consequat tellus eget lacus fringilla, at lobortis ex dapibus. Nulla pulvinar enim ac justo fermentum pretium. Quisque ut tellus eget magna lacinia rutrum. Cras mollis lectus eu nulla convallis molestie sit amet luctus dolor. Sed quis libero id dui pellentesque commodo sed eu leo. Quisque id nulla rhoncus, dapibus ligula et, dapibus nulla. Vivamus dapibus, ante vitae vulputate sodales, est lectus ullamcorper est, sed auctor orci dui et lacus. Suspendisse faucibus commodo purus, sed rhoncus odio luctus vel. Fusce posuere pulvinar diam eget egestas. Integer in felis porttitor, vestibulum dui vitae, euismod dolor. Proin vel tristique arcu. Aliquam at ultricies magna. Phasellus orci mi, mattis et urna vitae, efficitur eleifend dui. Suspendisse molestie hendrerit bibendum.
-
-        Cras iaculis porta risus nec gravida. Fusce rutrum odio eget malesuada vulputate. Aliquam vitae porta metus, euismod tristique nulla. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sollicitudin consectetur dolor, vel imperdiet purus scelerisque ac. Donec egestas fermentum malesuada. Phasellus lobortis suscipit leo, et blandit ipsum porttitor vitae. Pellentesque euismod dapibus nisi ac facilisis. Curabitur lobortis, dui sed pellentesque pulvinar, turpis lacus vestibulum orci, eget vestibulum dui nisl a mi.
-    </p>
-    <button class="button" onclick="window.location.href = '/Home/Map'">Klik hier om verder te gaan</button>
+        <b>How to</b> <br />
+        You are now in home, if you press the map tab at the top of the page you will be transported to the map of Rotterdam. Here you got three tabs.
+        <br /><br />
+        <b>Walking distance</b>
+        <br>
+        On the map you’ll have destinations, here you can
+        select a starting point (This is where you are) and you have to select an endpoint. This is where you want to go. After you selected the 2 destinations the website will calculate the distance from your starting point to your selected endpoint. You’ll see the distance on the screen after the app is done calculating the distance this should not take long at all, it will most likely be instantaneous.
+        <br /><br />
+        <b>Points of interest from Station</b>
+        <br>
+        On the map you can select a station of choice.
+        After selecting the station, a radius will appear on
+        the map with points of interest in that same radius.
+        If you click on these points you can view the details of the points of interest. If you want to calculate the walking distance/time you can select one of the appropriate tabs.
+        <br></br>
+        <b>Walking time</b>
+        <br />
+        On the map you’ll have various destinations, you have to select a starting point from where you want to begin. After that you have to select your final destination, when that is done the website will calculate the fastest route to your destination and it will show the time it will take for you to get there.
+    </p>    
+    <button class="button" onclick="window.location.href = '/Home/Map'">Click here to continue</button>
 </div>
