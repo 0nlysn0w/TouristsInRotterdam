@@ -14,77 +14,18 @@
     #map {
         height: 85vh;
     }
+	.container {
+		max-width: 100%;
+	}
+
+	.modus-toggle {
+		width: 100%;
+		margin: 20px auto 20px auto;
+	}
+
 </style>
 
-<script>
-    // **1
-    //Replace placeholder with points of interests from database. 
-    var ListOfPointsOfInterests = ["Placeholder"];
-</script>
-
-<!--
-    **10 
-    Buttons to change tabs. The buttons are supposed to place a "hidden" tag at all 3 "tabContainer" divs and removes the one that 
-    fits the button that is pressed.
--->
-<div id="tabButtonsContainer">
-    <button class="btn btn-primary" name="PointOfInterest">Walking distance</button>
-    <button class="btn btn-primary" name="PointOfInterest">points of interests from station</button>
-    <button class="btn btn-primary" name="PointOfInterest">Walking time</button>
-</div>
-<!--
-    Start of the first tab: The walking distance from point A to B.    
--->
-<div id="tabContainerWalkingDistance" hidden>
-    <div class="col-md-1"></div>
-    <div class="space" id="startStationSelectionContainerWalkingDistance" class="col-md-6 stationSelectionContainer">
-        <span>Start place: </span>
-        <select id="startStationSelection">
-            <!-- **3 -->
-            <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-            <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-            <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-            <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-        </select>
-    </div>
-
-    <div class="space" id="destinationStationSelectionContainerWalkingDistance" class="col-md-4 stationSelectionContainer">
-        <span>Desired place: </span>
-        <select id="destinationStationSelection">
-            <!-- **4 -->
-            <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-            <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-            <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-            <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-        </select>
-    </div>
-    <div id="walkingDistanceDirectionNotation" class="col-md-2">
-        <!-- **5 -->
-        <span>direction x DUMMY</span>
-        <br />
-        <br />
-        <span>direction x DUMMY</span>
-        <br />
-        <br />
-        <span>direction x DUMMY</span>
-        <br />
-        <br />
-        <span>direction x DUMMY</span>
-        <br />
-        <br />
-        <span>direction x DUMMY</span>
-        <br />
-        <br />
-        <span>direction x DUMMY</span>
-        <br />
-        <br />
-        <span>direction x DUMMY</span>
-        <br />
-        <br />
-    </div>
-</div>
-
-<!--
+@*<!--
     Start of the second tab: The total points of interests the user is interested in.    
 -->
 <div id="tabContainerAmountPointsOfInterest" hidden>
@@ -205,17 +146,44 @@
             <br />
         </div>
     </div>
+</div>*@
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="btn-group modus-toggle" data-toggle="buttons">
+				<label class="btn btn-info active">
+					<input type="radio" name="modus" id="one" autocomplete="off" checked /> Nearby POI's
+				</label>
+				<label class="btn btn-info">
+					<input type="radio" name="modus" id="two" autocomplete="off" /> Walking distance
+				</label>
+				<label class="btn btn-info">
+					<input type="radio" name="modus" id="three" autocomplete="off" /> Walking time
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<h3>Selected station</h3>
+			<div id="SelectedStation"></div>
+			<h3>Places:</h3>
+			<ul id="results"></ul>
+		</div>
+		<div id="map" class="col-md-9"></div>
+	</div>
 </div>
 
-<div id="map" class="col-md-10"></div>
+
 <script>
 	var map;
-	var Markers = {};
+	var StationMarkers = {};
+	var PoiMarkers = [];
 	var infoWindow;
 	var locations = @Html.Raw(tir.web.Models.Station.GetLocations());
 
 	function appropriateIcon(type) {
-		console.log(type)
 		if (type == "Bus") {
 			return '@Url.Content("../Images/bus.png")'
 		} else if (type == "Metro") {
@@ -232,15 +200,17 @@
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: 51.9182711, lng: 4.4791135 },
-            zoom: 12
+			zoom: 12,
+			styles: tirStyle
 		});
-
-		var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 		infowindow = new google.maps.InfoWindow();
 
+		//var directionsService = new google.maps.DirectionsService;
+		//var directionsDisplay = new google.maps.DirectionsRenderer;
         var transitLayer = new google.maps.TransitLayer();
 		transitLayer.setMap(map);
+		//directionsDisplay.setMap(map);
 
 		for (i = 0; i < locations.length; i++) {
 			var position = new google.maps.LatLng(locations[i][2], locations[i][3]);
@@ -254,50 +224,148 @@
 					infowindow.setContent(locations[i][1]);
 					infowindow.setOptions({ maxWidth: 200 });
 					infowindow.open(map, marker);
+					var span = document.createElement('span');
+					var station = document.getElementById('SelectedStation')
+					span.textContent = locations[i][5] + ": " + locations[i][0];
+					span.id = locations[i][2] + ", " + locations[i][3];
+					while (station.firstChild) {
+						station.removeChild(station.firstChild);
+					}
+					station.appendChild(span);
+					nearbyPlaces(locations[i]);
 				}
 			})(marker, i));
 
-			//helps locate
-			Markers[locations[i][4]] = marker;
+			StationMarkers[locations[i][4]] = marker;
+		}
+		var markerCluster = new MarkerClusterer(map, StationMarkers, { imagePath: '@Url.Content("../Images/m")' });
+	}
+
+	function route(directionsService, directionsDisplay, clickedDest) {
+		console.log(clickedDest)
+		directionsService.route({
+			origin: document.getElementById('SelectedStation').firstChild.id,
+			destination: clickedDest,
+			travelMode: 'WALKING'
+		}, function (response, status) {
+			if (status === 'OK') {
+				directionsDisplay.setDirections(response);
+			} else {
+				window.alert('Directions request failed due to ' + status);
+			}
+			});
+		directionsDisplay.setMap(map);
+	}
+	function nearbyPlaces(givenStation) {
+		var service = new google.maps.places.PlacesService(map);
+		service.nearbySearch({
+			location: { lat: givenStation[2], lng: givenStation[3] },
+			radius: 500,
+			type: 'atm'
+		}, callback);
+	}
+
+	function callback(results) {
+		if (PoiMarkers.length > 0) {
+			for (var i = 0; i < PoiMarkers.length; i++) {
+				PoiMarkers[i].setMap(null);
+			}
+			PoiMarkers = [];
+		}
+		var placesList = document.getElementById('results');
+
+		while (placesList.firstChild) {
+			placesList.removeChild(placesList.firstChild);
 		}
 
-		var markerCluster = new MarkerClusterer(map, Markers, { imagePath: '@Url.Content("../Images/m")' });
-
-		//Goes to location where the markers are
-		locate(0);
+		for (var i = 0; i < results.length; i++) {
+			createMarker(results[i], placesList);
+		}	
 	}
 
-  //      // TODO: Set labels from POI type
-  //      var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	function createMarker(place, placesList) {
+		var directionsService = new google.maps.DirectionsService;
+		var directionsDisplay = new google.maps.DirectionsRenderer;
 
-  //      // TODO: Add info for hover
-  //      // TODO: Make clickable for navigation
-  //      var markers = locations.map(function (location, i) {
-  //          return new google.maps.Marker({
-  //              position: location,
-  //              label: labels[i % labels.length]
-  //          });
-  //      });
+		var marker = new google.maps.Marker({
+			position: place.geometry.location,
+			map: map
+		});
 
-  //      // TODO: Add MarkerCluster images to image folder
-		//var markerCluster = new MarkerClusterer(map, markers, { imagePath: 'img/m' });
+		google.maps.event.addListener(marker, 'click', function () {
+			infowindow.setContent(place.name);
+			infowindow.open(map, marker);
+			route(directionsService, directionsDisplay, place.geometry.location);
+		});
 
-	function locate(marker_id) {
-		var myMarker = Markers[marker_id];
-		var markerPosition = myMarker.getPosition();
-		map.setCenter(markerPosition);
-		google.maps.event.trigger(myMarker, 'click');
+		var li = document.createElement('li');
+		li.textContent = place.name;
+		li.id = place.place_id;
+		placesList.appendChild(li);
+
+		PoiMarkers.push(marker);
 	}
 
-	google.maps.event.addDomListener(window, 'load', initialize);
+	var tirStyle = [
+		{
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "administrative.land_parcel",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "administrative.neighborhood",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "transit",
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "transit",
+			"elementType": "labels.text",
+			"stylers": [
+				{
+					"color": "#ffeb3b"
+				},
+				{
+					"visibility": "off"
+				},
+				{
+					"weight": 2
+				}
+			]
+		},
+		{
+			"featureType": "transit.station.airport",
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		}
+	]
 
-
-    // TODO: Get locations from DB
-    var locations = [
-        { lat: 51.9244201, lng: 4.4777326 },
-        { lat: 51.9159124, lng: 4.4788838 },
-        { lat: 51.9210251, lng: 4.4787017 }
-    ]
 </script>
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVBgL5foqZkd313a8S7k1gAq7vnkf2v3Q&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAC5aRtEa7uLiQkBht9xzShPxRnwsjxHs&libraries=places&callback=initMap"></script>
