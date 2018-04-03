@@ -3,51 +3,23 @@
 }
 
 <style>
-    body {
-        overflow: hidden;
+    html, body, .body-content, .container-fluid, .col-lg-9, #map {
+        height: 100%;
     }
 
-    .space {
-        margin-bottom: 25px;
+    body, .body-content, .col-lg-9 {
+        padding: 0;
     }
 
-    #map {
-        height: 85vh;
+    .navbar {
+        margin: 0;
     }
-	.container {
-		max-width: 100%;
-	}
-
-	.modus-toggle {
-		width: 100%;
-		margin: 20px auto 20px auto;
-	}
-
 </style>
 
-@*<!--
-    Start of the second tab: The total points of interests the user is interested in.    
--->
-<div id="tabContainerAmountPointsOfInterest" hidden>
-    <div id="leftSelectablesContainer"  class="col-md-2">
-        <!--
-            the radius in kilometers
-        -->
-        <div id="searchRadiusContainer">
-            <span>Radius: </span>
-            <br />
-            <select id="radiusSelectionInKm">
-                <option value="0.5">0.5 km</option>
-                <option value="1">1 km</option>
-                <option value="2">2 km</option>
-                <option value="3">3 km</option>
-                <option value="4">4 km</option>
-                <option value="5">5 km</option>
-                <option value="10">10 km</option>
-                <option value="15">15 km</option>
-                <option value="20">20 km</option>
-            </select>
-        </div>
+<div class="container-fluid">
+    <div class="col-lg-3">
+        <h2>Station</h2>
+        <div id="SelectedStation"></div>
 
         <!--
             The center point of the radius (the location)    
@@ -92,59 +64,8 @@
             <br>
         </div>
     </div>
-</div>
-
-<!--
-    Start of the third tab: the walking time from point A to B.
--->
-<div id="tabContainerWalkTime">
-    <div id="tabContainerWalkingTime">
-        <div class="col-md-1"></div>
-        <div id="StartStationSelectionContainerWalkingTime" class="col-md-6 stationSelectionContainer">
-            <span>Start place: </span>
-            <select id="startStationSelectionWalkingTime">
-                <!-- **7 -->
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-            </select>
-        </div>
-
-        <div id="destinationStationSelectionContainerWalkingTime" class="col-md-4 stationSelectionContainer">
-            <span>Desired place: </span>
-            <select id="destinationStationSelectionWalkingTime">
-                <!-- **8 -->
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-            </select>
-        </div>
-        <div id="walkingTimeDirectionNotation" class="col-md-2">
-            <!-- **9 -->
-            <span>direction x DUMMY</span>
-            <br />
-            <br />
-            <span>direction x DUMMY</span>
-            <br />
-            <br />
-            <span>direction x DUMMY</span>
-            <br />
-            <br />
-            <span>direction x DUMMY</span>
-            <br />
-            <br />
-            <span>direction x DUMMY</span>
-            <br />
-            <br />
-            <span>direction x DUMMY</span>
-            <br />
-            <br />
-            <span>direction x DUMMY</span>
-            <br />
-            <br />
-        </div>
+    <div class="col-lg-9">
+        <div id="map"></div>
     </div>
 </div>*@
 
@@ -168,7 +89,6 @@
 		<div id="map" class="col-md-9"></div>
 	</div>
 </div>
-
 
 <script>
 	var map;
@@ -323,8 +243,7 @@
 			drawRoute(directionsService, directionsDisplay, place);
         });
 
-        //Get route and add it's distance and duration to the list
-        route(directionsService, directionsDisplay, place)
+      route(directionsService, directionsDisplay, place);
 
 		PoiMarkers.push(marker);
 	}
