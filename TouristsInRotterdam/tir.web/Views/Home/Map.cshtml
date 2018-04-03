@@ -239,13 +239,15 @@
 		var markerCluster = new MarkerClusterer(map, StationMarkers, { imagePath: '@Url.Content("../Images/m")' });
 	}
 
-    function route(directionsService, directionsDisplay, clickedDest) {
+	function route(directionsService, directionsDisplay, clickedDest) {
+		sleep(100)
         directionsService.route({
             origin: document.getElementById('SelectedStation').firstChild.id,
             destination: clickedDest.geometry.location,
             travelMode: 'WALKING'
         }, function (response, status) {
-            if (status === 'OK') {
+			if (status === 'OK') {
+				
                 var row = placesList.insertRow(0);
 
                 var cell1 = row.insertCell(0);
@@ -272,22 +274,20 @@
             if (status === 'OK') {
                 directionsDisplay.setDirections(response)
             } else {
-                //window.alert('Directions request failed due to ' + status);
+                window.alert('Directions request failed due to ' + status);
             }
         });
     }
 
 	function nearbyPlaces(givenStation) {
-		var diffPlaces = ['atm', 'bar'];
 
-		diffPlaces.forEach(place => {
-			var service = new google.maps.places.PlacesService(map);
-			service.nearbySearch({
-				location: { lat: givenStation[2], lng: givenStation[3] },
-				radius: 500,
-				keyword: place
-			}, callback);
-		});
+
+		var service = new google.maps.places.PlacesService(map);
+		service.nearbySearch({
+			location: { lat: givenStation[2], lng: givenStation[3] },
+			radius: 500
+		}, callback);
+
 	}
 
 	function callback(results) {
@@ -331,6 +331,15 @@
         route(directionsService, directionsDisplay, place)
 
 		PoiMarkers.push(marker);
+	}
+
+	function sleep(milliseconds) {
+		var start = new Date().getTime();
+		for (var i = 0; i < 1e7; i++) {
+			if ((new Date().getTime() - start) > milliseconds) {
+				break;
+			}
+		}
 	}
 
 	var tirStyle = [
