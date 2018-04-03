@@ -1,0 +1,272 @@
+﻿@{
+    ViewBag.Title = "Map";
+}
+
+<style>
+    html, body, .body-content, .container-fluid, .col-lg-9, #map {
+        height: 100%;
+    }
+    .col-lg-9 {
+        padding: 0;
+    }
+    .col-lg-3 {
+        margin-top: 51px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="col-lg-3">
+        <h2>Station</h2>
+        <div id="SelectedStation"></div>
+
+        <h3>Places</h3>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Distance</th>
+                <th>Time</th>
+            </tr>
+            <tbody id="results"></tbody>
+        </table>
+    </div>
+    <div class="col-lg-9">
+        <div id="map"></div>
+    </div>
+</div>
+
+<script>
+	var map;
+	var StationMarkers = {};
+	var PoiMarkers = [];
+	var infoWindow;
+	var locations = @Html.Raw(tir.web.Models.Station.GetLocations());
+	var directionsService;
+	var directionsDisplay;
+	var placesList = document.getElementById('results');
+
+	function appropriateIcon(type) {
+		if (type == "Bus") {
+			return '@Url.Content("../Images/bus.png")'
+		} else if (type == "Metro") {
+			return '@Url.Content("../Images/metro.png")'
+		} else if (type == "Trein") {
+			return '@Url.Content("../Images/train.png")'
+		} else if (type == "Tram") {
+			return '@Url.Content("../Images/tram.png")'
+		} else {
+			return '@Url.Content("../Images/help.png")'
+		}
+	}
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 51.9182711, lng: 4.4791135 },
+			zoom: 12,
+			styles: tirStyle
+		});
+
+		directionsService = new google.maps.DirectionsService;
+		directionsDisplay = new google.maps.DirectionsRenderer;
+
+		infowindow = new google.maps.InfoWindow();
+
+        var transitLayer = new google.maps.TransitLayer();
+		transitLayer.setMap(map);
+		directionsDisplay.setMap(map);
+
+		for (i = 0; i < locations.length; i++) {
+			var position = new google.maps.LatLng(locations[i][2], locations[i][3]);
+			var marker = new google.maps.Marker({
+				position: position,
+				map: map,
+				icon: appropriateIcon(locations[i][5])
+			});
+			google.maps.event.addListener(marker, 'click', (function (marker, i) {
+				return function () {
+					infowindow.setContent(locations[i][1]);
+					infowindow.setOptions({ maxWidth: 200 });
+					infowindow.open(map, marker);
+					var h4 = document.createElement('h4');
+					var station = document.getElementById('SelectedStation')
+					h4.textContent = locations[i][5] + ": " + locations[i][0];
+					h4.id = locations[i][2] + ", " + locations[i][3];
+					while (station.firstChild) {
+						station.removeChild(station.firstChild);
+					}
+					station.appendChild(h4);
+					nearbyPlaces(locations[i]);
+				}
+			})(marker, i));
+
+			StationMarkers[locations[i][4]] = marker;
+		}
+		var markerCluster = new MarkerClusterer(map, StationMarkers, { imagePath: '@Url.Content("../Images/m")' });
+	}
+
+	function route(directionsService, directionsDisplay, clickedDest) {
+		sleep(100)
+        directionsService.route({
+            origin: document.getElementById('SelectedStation').firstChild.id,
+            destination: clickedDest.geometry.location,
+            travelMode: 'WALKING'
+        }, function (response, status) {
+			if (status === 'OK') {
+				
+                var row = placesList.insertRow(0);
+
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+
+                cell1.innerHTML = clickedDest.name
+                cell2.innerHTML = response["routes"][0]["legs"][0]["distance"]["text"]
+                cell3.innerHTML = response["routes"][0]["legs"][0]["duration"]["text"]
+
+                row.onclick = function () { drawRoute(directionsService, directionsDisplay, clickedDest) }
+
+                placesList.appendChild(row);
+            } else {
+                //window.alert('Directions request failed due to ' + status);
+            }
+        });
+    }
+
+    function drawRoute(directionsService, directionsDisplay, clickedDest) {
+        directionsService.route({
+            origin: document.getElementById('SelectedStation').firstChild.id,
+            destination: clickedDest.geometry.location,
+            travelMode: 'WALKING'
+        }, function (response, status) {
+            if (status === 'OK') {
+                directionsDisplay.setDirections(response)
+            } else {
+                window.alert('Directions request failed due to ' + status);
+            }
+        });
+    }
+
+	function nearbyPlaces(givenStation) {
+
+
+		var service = new google.maps.places.PlacesService(map);
+		service.nearbySearch({
+			location: { lat: givenStation[2], lng: givenStation[3] },
+			radius: 500
+		}, callback);
+
+	}
+
+	function callback(results) {
+		if (PoiMarkers.length > 0) {
+			for (var i = 0; i < PoiMarkers.length; i++) {
+				PoiMarkers[i].setMap(null);
+			}
+			PoiMarkers = [];
+		}
+
+		while (placesList.firstChild) {
+			placesList.removeChild(placesList.firstChild);
+		}
+
+		for (var i = 0; i < results.length; i++) {
+			createMarker(results[i]);
+		}	
+	}
+
+	function routeInfo(directionsService, clickedDest) {
+		return directionsService.route({
+			origin: document.getElementById('SelectedStation').firstChild.id,
+			destination: clickedDest,
+			travelMode: 'WALKING'
+		});
+	}
+
+	function createMarker(place) {
+		var marker = new google.maps.Marker({
+			position: place.geometry.location,
+			map: map
+		});
+
+		google.maps.event.addListener(marker, 'click', function () {
+			infowindow.setContent(place.name);
+			infowindow.open(map, marker);
+			drawRoute(directionsService, directionsDisplay, place);
+        });
+
+      route(directionsService, directionsDisplay, place);
+
+		PoiMarkers.push(marker);
+	}
+
+	function sleep(milliseconds) {
+		var start = new Date().getTime();
+		for (var i = 0; i < 1e7; i++) {
+			if ((new Date().getTime() - start) > milliseconds) {
+				break;
+			}
+		}
+	}
+
+	var tirStyle = [
+		{
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "administrative.land_parcel",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "administrative.neighborhood",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "transit",
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		},
+		{
+			"featureType": "transit",
+			"elementType": "labels.text",
+			"stylers": [
+				{
+					"color": "#ffeb3b"
+				},
+				{
+					"visibility": "off"
+				},
+				{
+					"weight": 2
+				}
+			]
+		},
+		{
+			"featureType": "transit.station.airport",
+			"elementType": "labels",
+			"stylers": [
+				{
+					"visibility": "off"
+				}
+			]
+		}
+	]
+
+</script>
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAC5aRtEa7uLiQkBht9xzShPxRnwsjxHs&libraries=places&callback=initMap"></script>

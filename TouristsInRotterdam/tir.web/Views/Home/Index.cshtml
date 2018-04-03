@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<div class="container">
+    <div class="jumbotron">
+        <h1>Welcome to Rotterdam</h1>
+        <p>Looking for something in our beautiful city? We'll give you locations within walking distance of public transport.</p>
+        @Html.ActionLink("To the map", "Map", "Home", null, new { @class = "btn btn-lg btn-primary" })
+    </div>
+
+    <div class="row">
+        <div class="col-lg-9">
+            <h2>How to</h2>
+
+            <h4>Stations</h4>
+            <p>
+                Press the button above saying "To the map". It'll take you to our map of Rotterdam.
+                You'll see a lot of stations if you zoom in.
+            </p>
+
+            <h4>Locations</h4>
+            <p>
+                You can press any of these stations.
+                If you press any of these nearby locations will show up.
+            </p>
+
+            <h4>Routes</h4>
+            <p>
+                When you click on any of those (either on the map or in the list) the shortest route will be calculated for you.
+            </p>
+        </div>
+        <div class="col-lg-3">
+            <h3>Markers</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><img src="~/Images/train.png" /> Train station</li>
+                <li class="list-group-item"><img src="~/Images/metro.png" /> Metro station</li>
+                <li class="list-group-item"><img src="~/Images/tram.png" /> Tram station</li>
+                <li class="list-group-item"><img src="~/Images/bus.png" /> Bus station</li>
+            </ul>
+        </div>
+    </div>
+</div>
