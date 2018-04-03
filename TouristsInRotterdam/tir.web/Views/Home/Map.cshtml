@@ -18,76 +18,22 @@
 
 <div class="container-fluid">
     <div class="col-lg-3">
-        <h2>Station</h2>
+        <h2>Station:</h2>
         <div id="SelectedStation"></div>
 
-        <!--
-            The center point of the radius (the location)    
-        -->
-
-        <div id="centerPointStationSelectionContainer">
-            <span>Station: </span>
-            <select id="centerPointStationSelection">
-                <!-- **6 -->
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-                <option value="trainBlaakDUMMY">Train (blaak) (DUMMY)</option>
-            </select>
-        </div>
-
-        <!--
-        **2
-        INFORMATION ON FILLING THE SELECTABLE POINTS OF INTERESTS:
-        Fill the id with "selectablePointsOfInterests" with the data from the database. I'd use a for each point of interest loop:
-            '<input type="checkbox" id=*databaseVariableName* + "CheckBox" class="selectablePointOfInterest" name="PointOfInterest">
-                <label>
-                    <script>*databaseVariableName*></script>
-                </label>'
-        -->
-
-        <div id="selectablePointsOfInterests">
-            <input type="checkbox" name="PointOfInterest">
-            <label>mc donald (DUMMY)</label>
-            <br>
-            <input type="checkbox" name="PointOfInterest">
-            <label>Subway (DUMMY)</label>
-            <br>
-            <input type="checkbox" name="PointOfInterest">
-            <label>KFC (DUMMY)</label>
-            <br>
-            <input type="checkbox" name="PointOfInterest">
-            <label>Pathé (DUMMY)</label>
-            <br>
-            <input type="checkbox" name="PointOfInterest">
-            <label>de kuip (DUMMY)</label>
-            <br>
-        </div>
+        <h3>Places:</h3>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Distance</th>
+                <th>Time</th>
+            </tr>
+            <tbody id="results"></tbody>
+        </table>
     </div>
     <div class="col-lg-9">
         <div id="map"></div>
     </div>
-</div>*@
-
-<div class="container">
-	<div class="row">
-		<div class="col-md-3">
-			<h3>Selected station</h3>
-			<div id="SelectedStation"></div>
-			<h3>Places:</h3>
-			<table class="table table-sm">
-				<tr>
-					<th scope="col">Name</th>
-					<th scope="col">Distance</th>
-					<th scope="col">Time</th>
-				</tr>
-				<tbody id="results">
-
-				</tbody>
-			</table>
-		</div>
-		<div id="map" class="col-md-9"></div>
-	</div>
 </div>
 
 <script>
