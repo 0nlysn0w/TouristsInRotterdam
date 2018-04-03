@@ -6,22 +6,20 @@
     html, body, .body-content, .container-fluid, .col-lg-9, #map {
         height: 100%;
     }
-
-    body, .body-content, .col-lg-9 {
+    .col-lg-9 {
         padding: 0;
     }
-
-    .navbar {
-        margin: 0;
+    .col-lg-3 {
+        margin-top: 51px;
     }
 </style>
 
 <div class="container-fluid">
     <div class="col-lg-3">
-        <h2>Station:</h2>
+        <h2>Station</h2>
         <div id="SelectedStation"></div>
 
-        <h3>Places:</h3>
+        <h3>Places</h3>
         <table class="table">
             <tr>
                 <th>Name</th>
@@ -88,14 +86,14 @@
 					infowindow.setContent(locations[i][1]);
 					infowindow.setOptions({ maxWidth: 200 });
 					infowindow.open(map, marker);
-					var span = document.createElement('span');
+					var h4 = document.createElement('h4');
 					var station = document.getElementById('SelectedStation')
-					span.textContent = locations[i][5] + ": " + locations[i][0];
-					span.id = locations[i][2] + ", " + locations[i][3];
+					h4.textContent = locations[i][5] + ": " + locations[i][0];
+					h4.id = locations[i][2] + ", " + locations[i][3];
 					while (station.firstChild) {
 						station.removeChild(station.firstChild);
 					}
-					station.appendChild(span);
+					station.appendChild(h4);
 					nearbyPlaces(locations[i]);
 				}
 			})(marker, i));
