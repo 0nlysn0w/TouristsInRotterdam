@@ -2,70 +2,42 @@
     ViewBag.Title = "Home";
 }
 
-<style>
-    body {
-        overflow: hidden;
-    }
-    div.container.body-content {
-        background: grey;
-        color: white;
-    }
+<div class="container">
+    <div class="jumbotron">
+        <h1>Welcome to Rotterdam</h1>
+        <p>Looking for something in our beautiful city? We'll give you locations within walking distance of public transport.</p>
+        @Html.ActionLink("To the map", "Map", "Home", null, new { @class = "btn btn-lg btn-primary" })
+    </div>
 
-    h1 {
-        font-size: 36px;
-        margin: 45px auto;
-    }
+    <div class="row">
+        <div class="col-lg-9">
+            <h2>How to</h2>
 
-    p {
-        font-size: 18px;
-    }
+            <h4>Stations</h4>
+            <p>
+                Press the button above saying "To the map". It'll take you to our map of Rotterdam.
+                You'll see a lot of stations if you zoom in.
+            </p>
 
-    .button {
-        background-color: black;
-        border: none;
-        color: white;
-        padding: 15px 32px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        width: 300px;
-        margin: 4px 50%;
-        cursor: pointer;
-        transform: translateX(-50%);
-    }
+            <h4>Locations</h4>
+            <p>
+                You can press any of these stations.
+                If you press any of these nearby locations will show up.
+            </p>
 
-    .button:hover {
-        box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-    }
-</style>
-
-<div>
-    <h1>Welcome to the city of Rotterdam</h1>
-    <p>Are you lost or do you just need a guide trough the beautiful city? We are here to help you. <br />
-    We offer you a lot of public transport routes, fastfood restaurants and ofcourse the points of interests you should not miss while staying in Rotterdam.</p>
-</div>
-<hr />
-<div id="overflow">
-    <p>
-        <b>How to</b> <br />
-        You are now in home, if you press the map tab at the top of the page you will be transported to the map of Rotterdam. Here you got three tabs.
-        <br /><br />
-        <b>Walking distance</b>
-        <br>
-        On the map you’ll have destinations, here you can
-        select a starting point (This is where you are) and you have to select an endpoint. This is where you want to go. After you selected the 2 destinations the website will calculate the distance from your starting point to your selected endpoint. You’ll see the distance on the screen after the app is done calculating the distance this should not take long at all, it will most likely be instantaneous.
-        <br /><br />
-        <b>Points of interest from Station</b>
-        <br>
-        On the map you can select a station of choice.
-        After selecting the station, a radius will appear on
-        the map with points of interest in that same radius.
-        If you click on these points you can view the details of the points of interest. If you want to calculate the walking distance/time you can select one of the appropriate tabs.
-        <br></br>
-        <b>Walking time</b>
-        <br />
-        On the map you’ll have various destinations, you have to select a starting point from where you want to begin. After that you have to select your final destination, when that is done the website will calculate the fastest route to your destination and it will show the time it will take for you to get there.
-    </p>    
-    <button class="button" onclick="window.location.href = '/Home/Map'">Click here to continue</button>
+            <h4>Routes</h4>
+            <p>
+                When you click on any of those (either on the map or in the list) the shortest route will be calculated for you.
+            </p>
+        </div>
+        <div class="col-lg-3">
+            <h3>Markers</h3>
+            <ul class="list-group">
+                <li class="list-group-item"><img src="~/Images/train.png" /> Train station</li>
+                <li class="list-group-item"><img src="~/Images/metro.png" /> Metro station</li>
+                <li class="list-group-item"><img src="~/Images/tram.png" /> Tram station</li>
+                <li class="list-group-item"><img src="~/Images/bus.png" /> Bus station</li>
+            </ul>
+        </div>
+    </div>
 </div>
