@@ -45,6 +45,8 @@
 		display: none;
 		border: 1px #dadada solid;
 		background: white;
+		column-count: 2;
+		width: 500px;
 	}
 
 	#typeCheckboxes label {
@@ -67,6 +69,33 @@
 		<h2>Station</h2>
 		<div id="SelectedStation"></div>
 
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">
+			Filter options
+		</button>
+
+		<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="typeCheckboxes">
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<form>
 			<div class="multiselect">
 				<div class="selectBox" onclick="showCheckboxes()">
@@ -75,8 +104,8 @@
 					</select>
 					<div class="overSelect"></div>
 				</div>
-				<div id="typeCheckboxes">
-				</div>
+				@*<div id="typeCheckboxes">
+				</div>*@
 			</div>
 		</form>
 
@@ -104,7 +133,8 @@
 	var directionsService;
 	var directionsDisplay;
 	var placesList = document.getElementById('results');
-	//var chosenTypes;
+	populateDropdown();
+
 
 	function appropriateIcon(type) {
 		if (type == "Bus") {
@@ -210,8 +240,6 @@
     }
 
 	function nearbyPlaces(givenStation, chosenTypes) {
-
-		console.log(chosenTypes)
 		var service = new google.maps.places.PlacesService(map);
 		service.nearbySearch({
 			location: { lat: givenStation[2], lng: givenStation[3] },
@@ -273,7 +301,6 @@
 	}
 
 	//js shit for the dropdown
-
 	var expanded = false;
 
 	function showCheckboxes() {
@@ -293,7 +320,6 @@
 
 			var checkbox = document.createElement('input');
 			checkbox.type = "checkbox";
-			//checkbox.name = "name";
 			checkbox.className = "checks";
 			checkbox.value = placeTypes[i][0];
 			checkbox.id = placeTypes[i][0];
