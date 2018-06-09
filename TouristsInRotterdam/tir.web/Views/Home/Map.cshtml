@@ -44,15 +44,22 @@
 	#typeCheckboxes {
 		display: none;
 		border: 1px #dadada solid;
+		background: white;
 	}
 
 	#typeCheckboxes label {
 		display: block;
+		padding: 5px;
 	}
 
 	#typeCheckboxes label:hover {
 		background-color: #1e90ff;
 	}
+
+	#typeCheckboxes input {
+		margin-right: 5px;
+	}
+
 </style>
 
 <div class="container-fluid">
@@ -69,18 +76,10 @@
 					<div class="overSelect"></div>
 				</div>
 				<div id="typeCheckboxes">
-					@*<label for="one">
-						<input type="checkbox" id="one" />First checkbox
-					</label>
-					<label for="two">
-						<input type="checkbox" id="two" />Second checkbox
-					</label>
-					<label for="three">
-						<input type="checkbox" id="three" />Third checkbox
-					</label>*@
 				</div>
 			</div>
 		</form>
+
 		<h3 class="placesTag">Places</h3>
 		<table class="table">
 			<tr>
@@ -105,6 +104,7 @@
 	var directionsService;
 	var directionsDisplay;
 	var placesList = document.getElementById('results');
+	//var chosenTypes;
 
 	function appropriateIcon(type) {
 		if (type == "Bus") {
@@ -135,6 +135,7 @@
         var transitLayer = new google.maps.TransitLayer();
 		transitLayer.setMap(map);
 		directionsDisplay.setMap(map);
+		populateDropdown();
 
 		for (i = 0; i < locations.length; i++) {
 			var position = new google.maps.LatLng(locations[i][2], locations[i][3]);
@@ -145,6 +146,7 @@
 			});
 			google.maps.event.addListener(marker, 'click', (function (marker, i) {
 				return function () {
+					var chosenTypes = submitTypes();
 					infowindow.setContent(locations[i][1]);
 					infowindow.setOptions({ maxWidth: 200 });
 					infowindow.open(map, marker);
@@ -209,12 +211,12 @@
 
 	function nearbyPlaces(givenStation, chosenTypes) {
 
-
+		console.log(chosenTypes)
 		var service = new google.maps.places.PlacesService(map);
 		service.nearbySearch({
 			location: { lat: givenStation[2], lng: givenStation[3] },
 			radius: 500,
-
+			type: chosenTypes
 		}, callback);
 
 	}
@@ -272,16 +274,6 @@
 
 	//js shit for the dropdown
 
-	var select = document.getElementById("typeCheckboxes");
-
-	for (var i = 0; i < placeTypes.length; i++) {
-		var opt = options[i];
-		var el = document.createElement("option");
-		el.textContent = opt;
-		el.value = opt;
-		select.appendChild(el);
-	}​
-
 	var expanded = false;
 
 	function showCheckboxes() {
@@ -294,6 +286,44 @@
 			expanded = false;
 		}
 	}
+
+	var select = document.getElementById("typeCheckboxes");
+	function populateDropdown() {
+		for (var i = 0; i < placeTypes.length; i++) {
+
+			var checkbox = document.createElement('input');
+			checkbox.type = "checkbox";
+			//checkbox.name = "name";
+			checkbox.className = "checks";
+			checkbox.value = placeTypes[i][0];
+			checkbox.id = placeTypes[i][0];
+
+			var label = document.createElement('label')
+			label.htmlFor = placeTypes[i][0];
+			label.appendChild(checkbox);
+			label.appendChild(document.createTextNode(placeTypes[i][1]));
+
+			select.appendChild(label);
+		}
+	}
+
+	function submitTypes() {
+		var checks = document.getElementsByClassName('checks');
+
+		var selectedTypes = [];
+
+		for (var i = 0; i < placeTypes.length; i++) {
+			if (checks[i].checked === true) {
+				//str += checks[i].value + " ";
+
+				selectedTypes.push(checks[i].value)
+			}
+		}
+		console.log(selectedTypes);
+		return selectedTypes
+	}
+
+
 
 	var tirStyle = [
 		{
