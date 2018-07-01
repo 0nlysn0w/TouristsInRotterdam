@@ -5,6 +5,7 @@
 <style>
     html, body, .body-content, .container-fluid, .col-lg-9, #map {
         height: 100%;
+		overflow: hidden;
     }
     .col-lg-9 {
         padding: 0;
@@ -12,23 +13,194 @@
     .col-lg-3 {
         margin-top: 51px;
     }
+
+	.placesTag {
+		margin-top: 10px;
+	}
+
+	.timecol {
+		width: auto;
+	}
+
+/*stuff for the select box*/
+
+	.filterButton {
+		float: right;
+		position: relative;
+		top: -50px;
+	}
+
+	.multiselect {
+		width: 200px;
+		position: absolute;
+	}
+
+	.selectBox {
+		position: relative;
+	}
+
+	.selectBox select {
+		width: 100%;
+		font-weight: bold;
+	}
+
+	.overSelect {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+	}
+
+	#typeCheckboxes {
+		margin: auto;
+		display: none;
+		border: 0px #dadada solid;
+		background: white;
+		column-count: 5;
+		width: 1200px;
+	}
+
+	#typeCheckboxes label {
+		display: block;
+		padding: 5px;
+	}
+
+
+	#typeCheckboxes label:hover {
+		background-color: #1e90ff;
+	}
+
+	#typeCheckboxes input {
+		margin-right: 5px;
+	}
+
+	@@media screen and (min-width: 768px) {
+		.modal-dialog {
+			right: auto;
+			left: 50%;
+			width: 1400px;
+			padding-top: 30px;
+			padding-bottom: 30px;
+		}
+	}
+
+	@@media screen and (max-width: 1366px) {
+		.modal-dialog {
+			margin: 0 auto;
+			width: 1300px;
+			padding-top: 20px;
+			padding-bottom: 10px;
+		}
+
+		.modal-header {
+			padding: 10px;
+		}
+
+		#typeCheckboxes label {
+			font-size: 0.9em;
+			margin: 0px;
+		}
+
+		#typeCheckboxes {
+			column-count: 6;
+			margin-left: 20px;
+			margin-right: 20px;
+		}
+
+		.modal-body {
+			padding: 10px 0;
+		}
+
+		.modal-footer {
+			margin: 0px;
+			padding: 10px;
+		}
+	}
+
+	/* result table */
+
+	.resultItem:hover {
+		background-color: #e8e8e8;
+		cursor: pointer;
+	}
+
+	@@media screen and (max-width: 1366px) {
+		.table tbody > tr > td {
+			font-size: 0.9em;
+			padding:1px;
+		}
+	}
+
+
+
+	.notice {
+		float:left;
+	}
+
 </style>
 
 <div class="container-fluid">
-    <div class="col-lg-3">
-        <h2>Station</h2>
-        <div id="SelectedStation"></div>
+	<div class="col-lg-3">
+		<h2>Station</h2>
+		<div id="SelectedStation"></div>
 
-        <h3>Places</h3>
-        <table class="table">
-            <tr>
-                <th>Name</th>
-                <th>Distance</th>
-                <th>Time</th>
-            </tr>
-            <tbody id="results"></tbody>
-        </table>
-    </div>
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary filterButton" data-toggle="modal" data-target=".bd-example-modal-lg">
+			Filter options
+		</button>
+
+		<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">
+							Select one or more categories
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</h5>
+					</div>
+					<div class="modal-body">
+						<div id="typeCheckboxes" style="display: block;">
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<h5 class="notice">To apply the filter on your current search, click the station again</h5>
+						<button type="button" class="btn btn-danger" onclick="resetChecks();">Reset</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		@*<form>
+			<div class="multiselect">
+				<div class="selectBox" onclick="showCheckboxes()">
+					<select>
+						<option>Select an option</option>
+					</select>
+					<div class="overSelect"></div>
+				</div>
+				<div id="typeCheckboxes">
+				</div>
+			</div>
+		</form>*@
+
+		<h3 class="placesTag">Places</h3>
+		<div id="tableDiv">
+			<table class="table">
+				<tr>
+					<th>Name</th>
+					<th>Distance</th>
+					<th class="timecol">Time</th>
+				</tr>
+				<tbody id="results"></tbody>
+			</table>
+		</div>
+	</div>
     <div class="col-lg-9">
         <div id="map"></div>
     </div>
@@ -43,6 +215,8 @@
 	var directionsService;
 	var directionsDisplay;
 	var placesList = document.getElementById('results');
+	//populateDropdown();
+
 
 	function appropriateIcon(type) {
 		if (type == "Bus") {
@@ -73,6 +247,7 @@
         var transitLayer = new google.maps.TransitLayer();
 		transitLayer.setMap(map);
 		directionsDisplay.setMap(map);
+		populateDropdown();
 
 		for (i = 0; i < locations.length; i++) {
 			var position = new google.maps.LatLng(locations[i][2], locations[i][3]);
@@ -83,6 +258,7 @@
 			});
 			google.maps.event.addListener(marker, 'click', (function (marker, i) {
 				return function () {
+					var chosenTypes = submitTypes();
 					infowindow.setContent(locations[i][1]);
 					infowindow.setOptions({ maxWidth: 200 });
 					infowindow.open(map, marker);
@@ -94,7 +270,7 @@
 						station.removeChild(station.firstChild);
 					}
 					station.appendChild(h4);
-					nearbyPlaces(locations[i]);
+					nearbyPlaces(locations[i], chosenTypes);
 				}
 			})(marker, i));
 
@@ -112,7 +288,9 @@
         }, function (response, status) {
 			if (status === 'OK') {
 				
-                var row = placesList.insertRow(0);
+				var row = placesList.insertRow(0);
+
+				row.className = 'resultItem'
 
                 var cell1 = row.insertCell(0);
                 var cell2 = row.insertCell(1);
@@ -145,13 +323,12 @@
         });
     }
 
-	function nearbyPlaces(givenStation) {
-
-
+	function nearbyPlaces(givenStation, chosenTypes) {
 		var service = new google.maps.places.PlacesService(map);
 		service.nearbySearch({
 			location: { lat: givenStation[2], lng: givenStation[3] },
-			radius: 500
+			radius: 500,
+			type: chosenTypes
 		}, callback);
 
 	}
@@ -205,6 +382,66 @@
 				break;
 			}
 		}
+	}
+
+	//js shit for the dropdown
+	var expanded = false;
+
+	//function showCheckboxes() {
+	//	var typeCheckboxes = document.getElementById("typeCheckboxes");
+	//	if (!expanded) {
+	//		typeCheckboxes.style.display = "block";
+	//		expanded = true;
+	//	} else {
+	//		typeCheckboxes.style.display = "none";
+	//		expanded = false;
+	//	}
+	//}
+
+	var select = document.getElementById("typeCheckboxes");
+	function populateDropdown() {
+		for (var i = 0; i < placeTypes.length; i++) {
+
+			var checkbox = document.createElement('input');
+			checkbox.type = "checkbox";
+			checkbox.className = "checks";
+			checkbox.value = placeTypes[i][0];
+			checkbox.id = placeTypes[i][0];
+
+			var label = document.createElement('label')
+			label.htmlFor = placeTypes[i][0];
+			label.appendChild(checkbox);
+			label.appendChild(document.createTextNode(placeTypes[i][1]));
+
+			select.appendChild(label);
+		}
+	}
+
+	function submitTypes() {
+		var checks = document.getElementsByClassName('checks');
+
+		var selectedTypes = [];
+
+		for (var i = 0; i < placeTypes.length; i++) {
+			if (checks[i].checked === true) {
+				//str += checks[i].value + " ";
+
+				selectedTypes.push(checks[i].value)
+			}
+		}
+		console.log(selectedTypes);
+		return selectedTypes
+	}
+
+	function resetChecks() {
+		var checks = document.getElementsByClassName('checks');
+
+		console.log(checks)
+
+		for (var i = 0; i < checks.length; i++) {
+			checks[i].checked = false;
+		}
+		//checks.checked = false;
 	}
 
 	var tirStyle = [
@@ -266,6 +503,99 @@
 			]
 		}
 	]
+
+	var placeTypes = [
+		["accounting", "Accounting"],
+		["airport", "Airport"],
+		["amusement_park", "Amusement park"],
+		["aquarium", "Aquarium"],
+		["art_gallery", "Art gallery"],
+		["atm", "ATM"],
+		["bakery", "Bakery"],
+		["bank", "Bank"],
+		["bar", "Bar"],
+		["beauty_salon", "Beauty salon"],
+		["bicycle_store", "Bicycle store"],
+		["book_store", "Book store"],
+		["bowling_alley", "Bowling alley"],
+		["bus_station", "Bus station"],
+		["cafe", "Cafe"],
+		["campground", "Campground"],
+		["car_dealer", "Cardealer"],
+		["car_rental", "Car rental"],
+		["car_repair", "Car repair"],
+		["car_wash", "Car wash"],
+		["casino", "Casino"],
+		["cemetery", "Cemetery"],
+		["church", "Church"],
+		["city_hall", "City hall"],
+		["clothing_store", "Clothing store"],
+		["convenience_store", "Convenience store"],
+		["courthouse", "Courthouse"],
+		["dentist", "Dentist"],
+		["department_store", "Department store"],
+		["doctor", "Doctor"],
+		["electrician", "Electrician"],
+		["electronics_store", "Electronics store"],
+		["embassy", "Embassy"],
+		["fire_station", "Fire station"],
+		["florist", "Florist"],
+		["funeral_home", "Funeral home"],
+		["furniture_store", "Furniture store"],
+		["gas_station", "Gas station"],
+		["gym", "Gym"],
+		["hair_care", "Hair care"],
+		["hardware_store", "Hardware store"],
+		["hindu_temple", "Hindu temple"],
+		["home_goods_store", "Home goods store"],
+		["hospital", "Hospital"],
+		["insurance_agency", "Insuranceagency"],
+		["jewelry_store", "Jewelry store"],
+		["laundry", "Laundry"],
+		["lawyer", "Lawyer"],
+		["library", "Library"],
+		["liquor_store", "Liquor store"],
+		["local_government_office", "Local government office"],
+		["locksmith", "Locksmith"],
+		["lodging", "Lodging"],
+		["meal_delivery", "Meal delivery"],
+		["meal_takeaway", "Meal takeaway"],
+		["mosque", "Mosque"],
+		["movie_rental", "Movie rental"],
+		["movie_theater", "Movie theater"],
+		["moving_company", "Moving company"],
+		["museum", "Museum"],
+		["night_club", "Night club"],
+		["painter", "Painter"],
+		["park", "Park"],
+		["parking", "Parking"],
+		["pet_store", "Pet store"],
+		["pharmacy", "Pharmacy"],
+		["physiotherapist", "Physiotherapist"],
+		["plumber", "Plumber"],
+		["police", "Police"],
+		["post_office", "Post office"],
+		["real_estate_agency", "Real estate agency"],
+		["restaurant", "Restaurant"],
+		["roofing_contractor", "Roofing contractor"],
+		["rv_park", "RV park"],
+		["school", "School"],
+		["shoe_store", "Shoe store"],
+		["shopping_mall", "Shopping mall"],
+		["spa", "Spa"],
+		["stadium", "Stadium"],
+		["storage", "Storage"],
+		["store", "Store"],
+		["subway_station", "Subway station"],
+		["supermarket", "Supermarket"],
+		["synagogue", "Synagogue"],
+		["taxi_stand", "Taxi stand"],
+		["train_station", "Train station"],
+		["transit_station", "Transit station"],
+		["travel_agency", "Travel agency"],
+		["veterinary_care", "Veterinary care"],
+		["zoo", "Zoo"],
+	];
 
 </script>
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
