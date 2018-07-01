@@ -5,6 +5,7 @@
 <style>
     html, body, .body-content, .container-fluid, .col-lg-9, #map {
         height: 100%;
+		overflow: hidden;
     }
     .col-lg-9 {
         padding: 0;
@@ -14,7 +15,7 @@
     }
 
 	.placesTag {
-		margin-top: 40px;
+		margin-top: 10px;
 	}
 
 	.timecol {
@@ -22,6 +23,12 @@
 	}
 
 /*stuff for the select box*/
+
+	.filterButton {
+		float: right;
+		position: relative;
+		top: -50px;
+	}
 
 	.multiselect {
 		width: 200px;
@@ -59,6 +66,7 @@
 		padding: 5px;
 	}
 
+
 	#typeCheckboxes label:hover {
 		background-color: #1e90ff;
 	}
@@ -77,6 +85,59 @@
 		}
 	}
 
+	@@media screen and (max-width: 1366px) {
+		.modal-dialog {
+			margin: 0 auto;
+			width: 1300px;
+			padding-top: 20px;
+			padding-bottom: 10px;
+		}
+
+		.modal-header {
+			padding: 10px;
+		}
+
+		#typeCheckboxes label {
+			font-size: 0.9em;
+			margin: 0px;
+		}
+
+		#typeCheckboxes {
+			column-count: 6;
+			margin-left: 20px;
+			margin-right: 20px;
+		}
+
+		.modal-body {
+			padding: 10px 0;
+		}
+
+		.modal-footer {
+			margin: 0px;
+			padding: 10px;
+		}
+	}
+
+	/* result table */
+
+	.resultItem:hover {
+		background-color: #e8e8e8;
+		cursor: pointer;
+	}
+
+	@@media screen and (max-width: 1366px) {
+		.table tbody > tr > td {
+			font-size: 0.9em;
+			padding:1px;
+		}
+	}
+
+
+
+	.notice {
+		float:left;
+	}
+
 </style>
 
 <div class="container-fluid">
@@ -85,7 +146,7 @@
 		<div id="SelectedStation"></div>
 
 		<!-- Button trigger modal -->
-		<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">
+		<button type="button" class="btn btn-primary filterButton" data-toggle="modal" data-target=".bd-example-modal-lg">
 			Filter options
 		</button>
 
@@ -106,6 +167,7 @@
 
 					</div>
 					<div class="modal-footer">
+						<h5 class="notice">To apply the filter on your current search, click the station again</h5>
 						<button type="button" class="btn btn-danger" onclick="resetChecks();">Reset</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-primary" data-dismiss="modal">Save changes</button>
@@ -128,14 +190,16 @@
 		</form>*@
 
 		<h3 class="placesTag">Places</h3>
-		<table class="table">
-			<tr>
-				<th>Name</th>
-				<th>Distance</th>
-				<th class="timecol">Time</th>
-			</tr>
-			<tbody id="results"></tbody>
-		</table>
+		<div id="tableDiv">
+			<table class="table">
+				<tr>
+					<th>Name</th>
+					<th>Distance</th>
+					<th class="timecol">Time</th>
+				</tr>
+				<tbody id="results"></tbody>
+			</table>
+		</div>
 	</div>
     <div class="col-lg-9">
         <div id="map"></div>
@@ -224,7 +288,9 @@
         }, function (response, status) {
 			if (status === 'OK') {
 				
-                var row = placesList.insertRow(0);
+				var row = placesList.insertRow(0);
+
+				row.className = 'resultItem'
 
                 var cell1 = row.insertCell(0);
                 var cell2 = row.insertCell(1);
